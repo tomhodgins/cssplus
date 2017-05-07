@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 300">
+  <path d="M 100 0 H 300 V 100 H 200 V 200 H 300 V 300 H 100 V 200 H 0 V 100 H 100 Z"/>
+  <path d="M 400 0 H 700 V 100 H 600 V 300 H 400 V 200 H 500 V 100 H 400 Z"/>
+</svg>

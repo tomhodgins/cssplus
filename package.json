@@ -3,6 +3,12 @@
   "version": "0.0.1",
   "description": "CSSplus is a collection of CSS Reprocessor plugins that dynamically update CSS variables",
   "main": "index.js",
+  "files": [
+    "cursory.js",
+    "scrollery.js",
+    "selectory.js",
+    "varsity.js"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

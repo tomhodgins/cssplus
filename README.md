@@ -1,13 +1,17 @@
+![](http://i.imgur.com/mOpaudj.png)
+
 # CSSplus
 
 CSSplus is a collection of CSS Reprocessor plugins that dynamically update CSS variables.
 
+The plugins are designed to be used in tandem, though it's possible to pick and choose which plugins you want to include in each project.
+
 Included are the following plugins:
 
-- [cursory](#cursory-mousetouch-cursor-variables)
-- [scrollery](#scrollery-scroll-position-variables)
-- [selectory](#selectory-a-selector-resolver)
-- [varsity](#varsity-scoped-variables)
+- [**Cursory:** mouse/touch cursor variables](#cursory-mousetouch-cursor-variables)
+- [**Scrollery:** scroll position variables](#scrollery-scroll-position-variables)
+- [**Selectory:** a selector resolver](#selectory-a-selector-resolver)
+- [**Varsity:** scoped variables](#varsity-scoped-variables)
 
 
 ## Usage
