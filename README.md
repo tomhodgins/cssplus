@@ -66,6 +66,7 @@ Cursory is a CSS reprocessor that makes the following JS values available as CSS
 - `cursorY`
 - `innerWidth`
 - `innerHeight`
+- `clicked`
 
 These can be used as CSS variables with the following names:
 
@@ -73,6 +74,16 @@ These can be used as CSS variables with the following names:
 - `--cursorY`
 - `--innerWidth`
 - `--innerHeight`
+- `--clicked`
+
+These variables are updated at the following events:
+
+- `mousemove`
+- `touchmove`
+
+In addition, the `--clicked` variable is changed from `0` to `1` between the `mousedown` and `touchstart` events and the corresponding `mouseup` or `touchend` events. This allows you to use the `var(--clicked)` ratio as a `1` or `0` in your CSS `calc()` functions, or as a value for `opacity:;` fairly easily.
+
+To run Cursory whenever you want, use the `cursory()` function in JS.
 
 To make an element like `div` follow the cursor position when using `cursory`, use CSS with variables like this:
 
@@ -100,6 +111,10 @@ Scrollery is a CSS reprocessor that makes the following JS values available as C
 - `scrollTop`
 
 To have `scrollery` watch an element, you need to give that element a unique identifier, as well as add the `data-scrollery` attribute. The plugin will use either the value of the `data-scrollery` attribute, or else the value of the ID (if defined) for an element.
+
+By default, Scrollery will watch 0 elements. If you add a `data-scrollery` attribute to either the `<html>` or `<body>` element it will attach an event listener for the `scroll` event on the `window`, otherwise if you add the `data-scrollery` attribute attribute to other elements it will add a `scroll` listener to that element.
+
+To run Scrollery whenever you want, use the `scrollery()` function in JS.
 
 ```html
 <div id=example data-scrollery></div>
@@ -134,6 +149,15 @@ div[test="this.offsetWidth > 300"] {
   background: orange;
 }
 ```
+
+By default, Selectory will reprocess selectors by watching the following events:
+
+- `load`
+- `resize`
+- `input`
+- `click`
+
+To run Selectory whenever you want, use the `selectory()` function in JS.
 
 Apply a rule to an `input` when its `value=""` attribute is greater than `30`:
 
@@ -186,6 +210,15 @@ Varsity is a CSS reprocessor that makes the following JS values available as CSS
 - `characters`
 - `children`
 - `value`
+
+By default, Varsity will reprocess selectors by watching the following events:
+
+- `load`
+- `resize`
+- `input`
+- `click`
+
+To run Varsity whenever you want, use the `varsity()` function in JS.
 
 To have `varsity` watch an element, you need to give that element a unique identifier, as well as add the `data-varsity` attribute. The plugin will use either the value of the `data-varsity` attribute, or else the value of the ID (if defined) for an element.
 
