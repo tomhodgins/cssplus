@@ -1,7 +1,57 @@
 
 /*
- * Varsity
- */
+
+# Varsity
+## version 0.0.1
+
+Varsity is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:
+
+- `offsetWidth`
+- `offsetHeight`
+- `offsetLeft`
+- `offsetTop`
+- `aspect-ratio`
+- `characters`
+- `children`
+- `value`
+
+By default, Varsity will reprocess selectors by watching the following events:
+
+- `load`
+- `resize`
+- `input`
+- `click`
+
+To run Varsity whenever you want, use the `varsity()` function in JS.
+
+To have varsity watch an element, you need to give that element a unique identifier, as well as add the `data-varsity` attribute. The plugin will use either the value of the `data-varsity` attribute, or else the value of the `id` (if defined) for an element.
+
+```
+<div id=example data-varsity></div>
+
+<!-- or -->
+
+<div data-varsity=example></div>
+```
+
+Once the plugin is aware of an element to watch, and the unique name of that element, it will make the above values available in the following format: `--name-value`, for example:
+
+- `--example-offsetWidth`
+- `--example-offsetHeight`
+- `--example-offsetLeft`
+- `--example-offsetTop`
+- `--example-aspect-rat`io
+- `--example-characters`
+- `--example-children`
+- `--example-value`
+
+- https://github.com/tomhodgins/cssplus
+
+Author: Tommy Hodgins
+
+License: MIT
+
+*/
 
 // Uses Node, AMD or browser globals to create a module
 (function (root, factory) {
@@ -21,7 +71,7 @@
   } else {
 
     // Browser globals (root is window)
-    root.EQCSS = factory();
+    root.varsity = factory();
 
   }
 

@@ -1,7 +1,41 @@
 
 /*
- * Cursory
- */
+
+# Cursory
+## version 0.0.1
+
+Cursory is a CSS reprocessor that makes the following JS values available as CSS variables:
+
+- `cursorX`
+- `cursorY`
+- `innerWidth`
+- `innerHeight`
+- `clicked`
+
+These can be used as CSS variables with the following names:
+
+- `--cursorX`
+- `--cursorY`
+- `--innerWidth`
+- `--innerHeight`
+- `--clicked`
+
+These variables are updated at the following events:
+
+- `mousemove`
+- `touchmove`
+
+In addition, the `--clicked` variable is changed from `0` to `1` between the `mousedown` and `touchstart` events and the corresponding `mouseup` or `touchend` events.
+
+To run Cursory whenever you want, use the `cursory()` function in JS.
+
+- https://github.com/tomhodgins/cssplus
+
+Author: Tommy Hodgins
+
+License: MIT
+
+*/
 
 // Uses Node, AMD or browser globals to create a module
 (function (root, factory) {
@@ -21,7 +55,7 @@
   } else {
 
     // Browser globals (root is window)
-    root.EQCSS = factory();
+    root.cursory = factory();
 
   }
 

@@ -1,7 +1,27 @@
 
 /*
- * Selectory
- */
+
+# Selectory
+## version 0.0.1
+
+Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a `[test]` attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test `1 == 1` will always resolve to `true`, so a selector written for `div[test="1 == 1"] {}` will always apply to each `div` element.
+
+By default, Selectory will reprocess selectors by watching the following events:
+
+- `load`
+- `resize`
+- `input`
+- `click`
+
+To run Selectory whenever you want, use the `selectory()` function in JS.
+
+- https://github.com/tomhodgins/cssplus
+
+Author: Tommy Hodgins
+
+License: MIT
+
+*/
 
 // Uses Node, AMD or browser globals to create a module
 (function (root, factory) {
@@ -21,7 +41,7 @@
   } else {
 
     // Browser globals (root is window)
-    root.EQCSS = factory();
+    root.selectory = factory();
 
   }
 

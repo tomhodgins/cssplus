@@ -11,6 +11,10 @@
     "url": "git+https://github.com/tomhodgins/cssplus.git"
   },
   "keywords": [
+    "Cursory",
+    "Scrollery",
+    "Selectory",
+    "Varsity",
     "CSS",
     "reprocessor",
     "selector",

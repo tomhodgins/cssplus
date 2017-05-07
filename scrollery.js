@@ -1,7 +1,27 @@
 
 /*
- * Scrollery
- */
+
+# Scrollery
+## version 0.0.1
+
+Scrollery is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:
+
+- `scrollWidth`
+- `scrollHeight`
+- `scrollLeft`
+- `scrollTop`
+
+To have scrollery watch an element, you need to give that element a unique identifier, as well as add the `data-scrollery` attribute. The plugin will use either the value of the `data-scrollery` attribute, or else the value of the `id` (if defined) for an element.
+
+By default, Scrollery will watch 0 elements. If you add a `data-scrollery` attribute to either the `<html>` or `<body>` element it will attach an event listener for the `scroll` event on the `window`, otherwise if you add the `data-scrollery` attribute to other elements it will add a `scroll` listener to that element.
+
+- https://github.com/tomhodgins/cssplus
+
+Author: Tommy Hodgins
+
+License: MIT
+
+*/
 
 // Uses Node, AMD or browser globals to create a module
 (function (root, factory) {
@@ -21,7 +41,7 @@
   } else {
 
     // Browser globals (root is window)
-    root.EQCSS = factory();
+    root.scrollery = factory();
 
   }
 
