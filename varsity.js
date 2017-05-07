@@ -56,10 +56,6 @@
       + `\n  --${name}-offsetHeight: ${tag.offsetHeight};`
       + `\n  --${name}-offsetLeft: ${tag.offsetLeft};`
       + `\n  --${name}-offsetTop: ${tag.offsetTop};`
-      + `\n  --${name}-scrollWidth: ${tag.scrollWidth};`
-      + `\n  --${name}-scrollHeight: ${tag.scrollHeight};`
-      + `\n  --${name}-scrollLeft: ${tag.scrollLeft};`
-      + `\n  --${name}-scrollTop: ${tag.scrollTop};`
       + `\n  --${name}-aspect-ratio: ${tag.offsetWidth/tag.offsetHeight};`
       + `\n  --${name}-characters: ${(tag.innerHTML.length || tag.value ? tag.value.length : 0 )};`
       + `\n  --${name}-children: ${tag.getElementsByTagName('*').length};`
