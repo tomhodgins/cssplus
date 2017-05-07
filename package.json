@@ -1,0 +1,32 @@
+{
+  "name": "cssplus",
+  "version": "0.0.1",
+  "description": "CSSplus is a collection of CSS Reprocessor plugins that dynamically update CSS variables",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomhodgins/cssplus.git"
+  },
+  "keywords": [
+    "CSS",
+    "reprocessor",
+    "selector",
+    "resolver",
+    "scoped",
+    "variables",
+    "cursor",
+    "scroll",
+    "selector",
+    "css",
+    "variable"
+  ],
+  "author": "Tommy Hodgins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tomhodgins/cssplus/issues"
+  },
+  "homepage": "https://github.com/tomhodgins/cssplus#readme"
+}
