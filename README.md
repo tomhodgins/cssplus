@@ -4,10 +4,10 @@ CSSplus is a collection of CSS Reprocessor plugins that dynamically update CSS v
 
 Included are the following plugins:
 
-- [cursory](#cursory---mousetouch-cursor-variables)
-- [scrollery](#scrollery---scroll-position-variables)
-- [selectory](#selectory---a-selector-resolver)
-- [varsity](#varsity---scoped-variables)
+- [cursory](#cursory-mousetouch-cursor-variables)
+- [scrollery](#scrollery-scroll-position-variables)
+- [selectory](#selectory-a-selector-resolver)
+- [varsity](#varsity-scoped-variables)
 
 
 ## Usage
@@ -87,7 +87,7 @@ div {
 }
 ```
 
-- Test available at [test/cursory.html](http://tomhodgins.github.io/cssplus/test/cursory.html)
+Test available at: [test/cursory.html](http://tomhodgins.github.io/cssplus/test/cursory.html)
 
 
 ## Scrollery: scroll position variables
@@ -118,7 +118,7 @@ Once the plugin is aware of an element to watch, and the unique name of that ele
 - `--example-scrollTop`
 - `--example-scrollLeft`
 
-- Test available at [test/scrollery.html](http://tomhodgins.github.io/cssplus/test/scrollery.html)
+Test available at: [test/scrollery.html](http://tomhodgins.github.io/cssplus/test/scrollery.html)
 
 
 ## Selectory: a selector resolver
@@ -160,8 +160,6 @@ input[test="5 < this.value.length"] {
 }
 ```
 
-- Test available at [test/selectory.html](http://tomhodgins.github.io/cssplus/test/selectory.html)
-
 Apply a rule to an `h3` element when it contains at least one `span` element
 
 ```css
@@ -171,6 +169,9 @@ h3[test="(this.querySelector('span'))"] {
 ```
 
 It is limited what selectors you can use with Selectory, things like `:hover` and pseudo-classes tend not to work as well. As well the parsing only allows for 1 test per selector, and complex selectors may not work as intended. Using `selector[test=""] {}` with a simple selector is best.
+
+Test available at: [test/selectory.html](http://tomhodgins.github.io/cssplus/test/selectory.html)
+
 
 
 ## Varsity: scoped variables
@@ -209,4 +210,4 @@ Once the plugin is aware of an element to watch, and the unique name of that ele
 - `--example-children`
 - `--example-value`
 
-- Test available at [test/varsity.html](http://tomhodgins.github.io/cssplus/test/varsity.html)
+Test available at: [test/varsity.html](http://tomhodgins.github.io/cssplus/test/varsity.html)
