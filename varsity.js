@@ -2,7 +2,7 @@
 /*
 
 # Varsity
-## version 0.0.1
+## version 0.0.2
 
 Varsity is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:
 
@@ -59,19 +59,19 @@ License: MIT
   if (typeof define === 'function' && define.amd) {
 
     // AMD: Register as an anonymous module
-    define([], factory);
+    define([], factory)
 
   } else if (typeof module === 'object' && module.exports) {
 
     // Node: Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node
-    module.exports = factory();
+    module.exports = factory()
 
   } else {
 
     // Browser globals (root is window)
-    root.varsity = factory();
+    root.varsity = factory()
 
   }
 

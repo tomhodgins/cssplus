@@ -2,7 +2,7 @@
 /*
 
 # Selectory
-## version 0.0.1
+## version 0.0.2
 
 Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a `[test]` attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test `1 == 1` will always resolve to `true`, so a selector written for `div[test="1 == 1"] {}` will always apply to each `div` element.
 
@@ -29,19 +29,19 @@ License: MIT
   if (typeof define === 'function' && define.amd) {
 
     // AMD: Register as an anonymous module
-    define([], factory);
+    define([], factory)
 
   } else if (typeof module === 'object' && module.exports) {
 
     // Node: Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node
-    module.exports = factory();
+    module.exports = factory()
 
   } else {
 
     // Browser globals (root is window)
-    root.selectory = factory();
+    root.selectory = factory()
 
   }
 
@@ -59,7 +59,7 @@ License: MIT
 
     })()
 
-    let style = ''
+    let style = '\n'
 
     // For each stylesheet
     Array.from(document.styleSheets, sheet => {
@@ -74,14 +74,17 @@ License: MIT
         // Start a new list of matching selectors
         let selectorList = ''
 
+        // Create a new attribute for elements that match this
+        let attr = ''
+
         // Extract css styles from rule
-        ruleText = ruleText.replace(/.*\{(.*)\}/,(string,match)=>{return match})
+        ruleText = ruleText.replace(/.*\{(.*)\}/, (string, match) => {return match})
 
         // If `[test=` is present anywhere in the selector
         if (selector.indexOf('[test=') !== -1) {
 
           // Extract the full selector name and test
-          selector = selector.replace(/^(.*)\[test=(?:"(.*)"|'(.*)')\]/gi, (string, selectorText, test) => {
+          selector.replace(/^(.*)\[test=(?:"(.*)"|'(.*)')\]/i, (string, selectorText, test) => {
 
             // Use asterisk (*) if selectorText is an empty string
             selectorText = selectorText === '' ? '*' : selectorText
@@ -95,14 +98,20 @@ License: MIT
               // Run the test with our matching element
               if (func.call(tag)) {
 
-                let attr = 'data-' + selectorText.replace(/[\#\.\[\]\=\"\'\^\*\$\:\s]/g,'-')
+                attr = 'data-' + selectorText.replace(/[\#\.\[\]\=\"\'\^\*\$\:\s]/g,'-')
+
+                var newSelector = selector.replace(/^(.*\[)(test=(?:".*"|'.*'))(\])/i, (string, before, test, after) => {
+
+                  return before + attr + after
+
+                })
 
                 // If true, add a new attribute to our element
                 tag.setAttribute(attr, i)
 
                 // And add our new attribute to the selector list for that rule
-                const comma = selectorList.length == 0 ? '' : ','
-                selectorList += `${comma} [${attr}="${i}"]`
+                const comma = selectorList.length == 0 ? '' : ',\n'
+                selectorList += comma + newSelector
 
               }
 
@@ -116,7 +125,7 @@ License: MIT
         if (0 < selectorList.length) {
 
           // Populate style tag with matching rules
-          style += `${selectorList} { ${ruleText} }`
+          style += `\n/* ${attr} */\n${selectorList} {\n ${ruleText.replace(/; /g,';\n  ')}\n}\n`
 
         }
 
@@ -125,7 +134,7 @@ License: MIT
     })
 
     // Populate style tag with style
-    style_tag.innerHTML = style
+    style_tag.innerHTML = style + '\n'
 
   }
 

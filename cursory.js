@@ -2,7 +2,7 @@
 /*
 
 # Cursory
-## version 0.0.1
+## version 0.0.2
 
 Cursory is a CSS reprocessor that makes the following JS values available as CSS variables:
 
@@ -43,19 +43,19 @@ License: MIT
   if (typeof define === 'function' && define.amd) {
 
     // AMD: Register as an anonymous module
-    define([], factory);
+    define([], factory)
 
   } else if (typeof module === 'object' && module.exports) {
 
     // Node: Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node
-    module.exports = factory();
+    module.exports = factory()
 
   } else {
 
     // Browser globals (root is window)
-    root.cursory = factory();
+    root.cursory = factory()
 
   }
 
@@ -68,19 +68,20 @@ License: MIT
     document.documentElement.style.setProperty('--cursorY', e.clientY || e.touches[0].clientY || innerHeight/2)
     document.documentElement.style.setProperty('--innerWidth', innerWidth)
     document.documentElement.style.setProperty('--innerHeight', innerHeight)
-    document.documentElement.style.setProperty('--clicked', (clicked ? 1 : 0))
+    document.documentElement.style.setProperty('--clicked', clicked)
 
   }
 
-  let clicked = false
+  // Set status of `clicked` variable
+  let clicked = 0
 
   const startClick = (e) => {
-    clicked = true
+    clicked = 1
     cursory(e)
   }
 
   const endClick = (e) => {
-    clicked = false
+    clicked = 0
     cursory(e)
   }
 

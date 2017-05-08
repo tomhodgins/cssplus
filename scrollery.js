@@ -2,7 +2,7 @@
 /*
 
 # Scrollery
-## version 0.0.1
+## version 0.0.2
 
 Scrollery is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:
 
@@ -29,19 +29,19 @@ License: MIT
   if (typeof define === 'function' && define.amd) {
 
     // AMD: Register as an anonymous module
-    define([], factory);
+    define([], factory)
 
   } else if (typeof module === 'object' && module.exports) {
 
     // Node: Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node
-    module.exports = factory();
+    module.exports = factory()
 
   } else {
 
     // Browser globals (root is window)
-    root.scrollery = factory();
+    root.scrollery = factory()
 
   }
 
@@ -62,18 +62,23 @@ License: MIT
     // Add scroll event listeners on elements with [data-scrollery] attribute
     Array.from(document.querySelectorAll('[data-scrollery]'), tag => {
 
+      // If we haven't added an event listener yet
       if (tag.getAttribute('data-scrollery-listen') !== true) {
 
+        // If listening to <html> or <body>
         if (tag === document.documentElement || tag === document.body) {
 
+          // watch `scroll` on `window`
           window.addEventListener('scroll', scrollery)
 
         } else {
 
+          // Otherwise listen to the `scroll` event on the element
           tag.addEventListener('scroll', scrollery)
 
         }
 
+        // Mark that we've added an event listener here
         tag.setAttribute('data-scrollery-listen', 'true')
 
       }
@@ -104,7 +109,7 @@ License: MIT
 
   }
 
-  // Update every `scroll`
+  // Update every `load`
   window.addEventListener('load', scrollery)
 
   return scrollery
