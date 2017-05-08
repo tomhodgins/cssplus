@@ -2,7 +2,7 @@
 /*
 
 # Cursory
-## version 0.0.2
+## version 0.0.3
 
 Cursory is a CSS reprocessor that makes the following JS values available as CSS variables:
 
@@ -64,8 +64,8 @@ License: MIT
   const cursory = (e) => {
 
     // Find current cursor position
-    document.documentElement.style.setProperty('--cursorX', e.clientX || e.touches[0].clientX || innerWidth/2)
-    document.documentElement.style.setProperty('--cursorY', e.clientY || e.touches[0].clientY || innerHeight/2)
+    document.documentElement.style.setProperty('--cursorX', e.clientX || (e.touches ? e.touches[0].clientX : innerWidth/2))
+    document.documentElement.style.setProperty('--cursorY', e.clientY || ( e.touches ? e.touches[0].clientY : innerHeight/2))
     document.documentElement.style.setProperty('--innerWidth', innerWidth)
     document.documentElement.style.setProperty('--innerHeight', innerHeight)
     document.documentElement.style.setProperty('--clicked', clicked)
@@ -84,6 +84,9 @@ License: MIT
     clicked = 0
     cursory(e)
   }
+
+  // Update on `load`
+  window.addEventListener('load', cursory)
 
   // Update every `mousemove`, `touchstart, and `touchmove`
   window.addEventListener('mousemove', cursory)
