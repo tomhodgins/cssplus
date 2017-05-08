@@ -2,7 +2,7 @@
 /*
 
 # Varsity
-## version 0.0.3
+## version 0.0.4
 
 Varsity is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:
 
@@ -107,7 +107,7 @@ License: MIT
       + `\n  --${name}-offsetLeft: ${tag.offsetLeft};`
       + `\n  --${name}-offsetTop: ${tag.offsetTop};`
       + `\n  --${name}-aspect-ratio: ${tag.offsetWidth/tag.offsetHeight};`
-      + `\n  --${name}-characters: ${(tag.innerHTML.length || tag.value ? tag.value.length : 0 )};`
+      + `\n  --${name}-characters: ${tag.innerHTML.length || (tag.value && tag.value.length) || 0};`
       + `\n  --${name}-children: ${tag.getElementsByTagName('*').length};`
       + `\n  --${name}-value: ${(tag.value || '')};`
     })
