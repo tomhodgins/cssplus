@@ -63,12 +63,14 @@ License: MIT
 
   const cursory = (e) => {
 
+    const html = document.documentElement
+
     // Find current cursor position
-    document.documentElement.style.setProperty('--cursorX', e.clientX || (e.touches ? e.touches[0].clientX : innerWidth/2))
-    document.documentElement.style.setProperty('--cursorY', e.clientY || ( e.touches ? e.touches[0].clientY : innerHeight/2))
-    document.documentElement.style.setProperty('--innerWidth', innerWidth)
-    document.documentElement.style.setProperty('--innerHeight', innerHeight)
-    document.documentElement.style.setProperty('--clicked', clicked)
+    html.style.setProperty('--cursorX', e.clientX || (e.touches ? e.touches[0].clientX : innerWidth/2))
+    html.style.setProperty('--cursorY', e.clientY || ( e.touches ? e.touches[0].clientY : innerHeight/2))
+    html.style.setProperty('--innerWidth', innerWidth)
+    html.style.setProperty('--innerHeight', innerHeight)
+    html.style.setProperty('--clicked', clicked)
 
   }
 

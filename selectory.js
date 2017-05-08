@@ -2,7 +2,7 @@
 /*
 
 # Selectory
-## version 0.0.2
+## version 0.0.3
 
 Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a `[test]` attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test `1 == 1` will always resolve to `true`, so a selector written for `div[test="1 == 1"] {}` will always apply to each `div` element.
 
@@ -59,7 +59,7 @@ License: MIT
 
     })()
 
-    let style = '\n'
+    let style = ''
 
     // For each stylesheet
     Array.from(document.styleSheets, sheet => {
@@ -125,7 +125,7 @@ License: MIT
         if (0 < selectorList.length) {
 
           // Populate style tag with matching rules
-          style += `\n/* ${attr} */\n${selectorList} {\n ${ruleText.replace(/; /g,';\n  ')}\n}\n`
+          style += `\n  /* ${attr} */\n  ${selectorList} {\n   ${ruleText.replace(/(; )([^\{])/g,';\n    $2')}\n  }\n`
 
         }
 
@@ -134,7 +134,7 @@ License: MIT
     })
 
     // Populate style tag with style
-    style_tag.innerHTML = style + '\n'
+    style_tag.innerHTML = `\n${style}\n`
 
   }
 
