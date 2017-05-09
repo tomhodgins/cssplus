@@ -2,7 +2,7 @@
 /*
 
 # Selectory
-## version 0.0.3
+## version 0.0.4
 
 Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a `[test]` attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test `1 == 1` will always resolve to `true`, so a selector written for `div[test="1 == 1"] {}` will always apply to each `div` element.
 
@@ -64,8 +64,9 @@ License: MIT
     // For each stylesheet
     Array.from(document.styleSheets, sheet => {
 
+
       // For each rule
-      Array.from(sheet.cssRules, rule => {
+      sheet.cssRules && Array.from(sheet.cssRules, rule => {
 
         // Remember selector and rule text
         let selector = rule.selectorText
@@ -81,7 +82,7 @@ License: MIT
         ruleText = ruleText.replace(/.*\{(.*)\}/, (string, match) => {return match})
 
         // If `[test=` is present anywhere in the selector
-        if (selector.indexOf('[test=') !== -1) {
+        if (selector && selector.indexOf('[test=') !== -1) {
 
           // Extract the full selector name and test
           selector.replace(/^(.*)\[test=(?:"(.*)"|'(.*)')\]/i, (string, selectorText, test) => {
@@ -102,7 +103,7 @@ License: MIT
 
                 var newSelector = selector.replace(/^(.*\[)(test=(?:".*"|'.*'))(\])/i, (string, before, test, after) => {
 
-                  return before + attr + after
+                  return before + attr + '="' + i + '"' + after
 
                 })
 
@@ -110,7 +111,7 @@ License: MIT
                 tag.setAttribute(attr, i)
 
                 // And add our new attribute to the selector list for that rule
-                const comma = selectorList.length == 0 ? '' : ',\n'
+                const comma = selectorList.length == 0 ? '' : ',\n  '
                 selectorList += comma + newSelector
 
               }

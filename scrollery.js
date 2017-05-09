@@ -2,7 +2,7 @@
 /*
 
 # Scrollery
-## version 0.0.3
+## version 0.0.4
 
 Scrollery is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:
 

@@ -248,3 +248,7 @@ Once the plugin is aware of an element to watch, and the unique name of that ele
 - `--example-value`
 
 Test available at: [test/varsity.html](http://tomhodgins.github.io/cssplus/test/varsity.html)
+
+## Demos
+
+For CSSplus demos, check out the [CSSPlus demos collection](http://codepen.io/collection/XLbNKz/) on Codepen.
