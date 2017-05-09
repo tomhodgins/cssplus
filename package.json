@@ -1,6 +1,6 @@
 {
   "name": "cssplus",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "CSSplus is a collection of CSS Reprocessor plugins that dynamically update CSS variables",
   "main": "index.js",
   "files": [
