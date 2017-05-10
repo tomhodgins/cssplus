@@ -251,4 +251,4 @@ Test available at: [test/varsity.html](http://tomhodgins.github.io/cssplus/test/
 
 ## Demos
 
-For CSSplus demos, check out the [CSSPlus demos collection](http://codepen.io/collection/XLbNKz/) on Codepen.
+For 20+ CSSplus demos, check out the [CSSPlus demos collection](http://codepen.io/collection/XLbNKz/) on Codepen.
