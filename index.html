@@ -195,7 +195,7 @@
   <li><a href=#varsity><strong>Varsity:</strong> scoped variables</a>
 </ul>
 
-<h3 id=cursory>Cursory <span>v0.0.5</span></h3>
+<h3 id=cursory>Cursory <span>v0.0.6</span></h3>
 <p>Cursory is a CSS reprocessor that makes the following JS values available as CSS variables:</p>
 <ul>
   <li><code>cursorX</code>
@@ -230,7 +230,7 @@
 }</code></pre>
 <p>Test available at: <a href=test/cursory.html>test/cursory.html</a></p>
 
-<h3 id=scrollery>Scrollery <span>v0.0.5</span></h3>
+<h3 id=scrollery>Scrollery <span>v0.0.6</span></h3>
 <p>Scrollery is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:</p>
 <ul>
   <li><code>scrollWidth</code>
@@ -253,7 +253,7 @@
 </ul>
 <p>Test available at: <a href=test/scrollery.html>test/scrollery.html</a></p>
 
-<h3 id=selectory>Selectory <span>v0.0.5</span></h3>
+<h3 id=selectory>Selectory <span>v0.0.6</span></h3>
 <p>Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a <code>[test]</code> attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test <code>1 == 1</code> will always resolve to <code>true</code>, so a selector written for <code>div[test="1 == 1"] {}</code> will always apply to each <code>div</code> element.</p>
 <p>By default, Selectory will reprocess selectors by watching the following events:</p>
 <ul>
@@ -286,7 +286,7 @@
 <p>It is limited what selectors you can use with Selectory, things like <code>:hover</code> and pseudo-classes tend not to work as well. As well the parsing only allows for 1 test per selector, and complex selectors may not work as intended. Using <code>selector[test=""] {}</code> with a simple selector is best.</p>
 <p>Test available at: <a href=test/selectory.html>test/selectory.html</a></p>
 
-<h3 id=varsity>Varsity <span>v0.0.5</span></h3>
+<h3 id=varsity>Varsity <span>v0.0.6</span></h3>
 <p>Varsity is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:</p>
 <ul>
   <li><code>offsetWidth</code>

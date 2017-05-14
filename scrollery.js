@@ -2,7 +2,7 @@
 /*
 
 # Scrollery
-## version 0.0.5
+## version 0.0.6
 
 Scrollery is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:
 
@@ -96,10 +96,22 @@ License: MIT
       // Set the name to the value of the data-varsity="" attribute, or the id="" if there is none
       let name = (tag.getAttribute('data-scrollery') || tag.id || i)
 
+      // Find current scrollHeight
+      let origHeight = tag.style.height
+      tag.style.height = 'auto'
+      let newScrollHeight = tag.scrollHeight
+      tag.style.height = origHeight
+
+      // Find current scrollWidth
+      let origWidth = tag.style.width
+      tag.style.width = 'auto'
+      let newScrollWidth = tag.scrollWidth
+      tag.style.width = origWidth
+
       // List properties of element as variables
       style += `\n\n  /* ${name} */`
-      + `\n  --${name}-scrollWidth: ${tag.scrollWidth};`
-      + `\n  --${name}-scrollHeight: ${tag.scrollHeight};`
+      + `\n  --${name}-scrollWidth: ${newScrollWidth};`
+      + `\n  --${name}-scrollHeight: ${newScrollHeight};`
       + `\n  --${name}-scrollLeft: ${tag.scrollLeft};`
       + `\n  --${name}-scrollTop: ${tag.scrollTop};`
     })
@@ -111,6 +123,7 @@ License: MIT
 
   // Update every `load`
   window.addEventListener('load', scrollery)
+  window.addEventListener('resize', scrollery)
 
   return scrollery
 
