@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <meta name=description content="CSSplus is a family of CSS reprocessor plugins that give you more power when writing CSS.">
-<meta name=keywords content="cssplus, css reprocessor, reprocessor, plugin, polyfill, cursory, scrollery, selectory, varsity, element queries, container queries, scoped styles, css variables, variables, parent selector, attribute">
+<meta name=keywords content="cssplus, css reprocessor, reprocessor, plugin, polyfill, aspecty, cursory, scrollery, selectory, varsity, element queries, container queries, scoped styles, css variables, variables, parent selector, attribute">
 <link href="https://fonts.googleapis.com/css?family=Fruktur|Source+Code+Pro:400,500,600,700,900|Source+Sans+Pro:400,400i,600,600i,700,700i,900,900i" rel=stylesheet>
 <title>CSSplus - A family of CSS Reprocessor Plugins</title>
 
@@ -20,22 +20,42 @@
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
     font-size: 10pt;
-    line-height: 1.4;
+    line-height: 1.7;
     -webkit-text-size-adjust: 100%;
-    background: hsl(var(--cursorX), 95%, 95%);
   }
   body {
     margin: 0 auto;
     padding: 1em;
     max-width: 800px;
   }
-  code, pre {
+  code,
+  pre {
     color: white;
     font-size: 14pt;
-    font-weight: 400;
-    text-shadow: rgba(0,0,0,.3) .05em .05em 0;
-    background: hsl(var(--cursorX), 50%, 25%);
+    font-weight: 600;
+    position: relative;
+    background-color: rgba(0,0,0,.4);
+    text-shadow: rgba(0,0,0,.2) .1em .1em 0;
     font-family: 'Source Code Pro', monospace;
+  }
+  pre code {
+    background: none;
+  }
+  pre code:before {
+    display: none;
+  }
+  code:before,
+  pre:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: hsl(var(--cursorY), 100%, 75%);
+    z-index: -1;
+    opacity: .2;
   }
   code {
     display: inline-block;
@@ -59,20 +79,20 @@
     margin: .25em;
   }
   a {
-    color: hsl(var(--cursorX), 50%, 25%);
+    color: hsl(var(--cursorY), 50%, 25%);
     font-size: 14pt;
   }
   a:hover {
-    color: hsl(var(--cursorX), 50%, 15%);
+    color: hsl(var(--cursorY), 50%, 15%);
   }
   :target {
-    color: hsl(var(--cursorX), 75%, 50%);
+    color: hsl(var(--cursorY), 75%, 50%);
   }
   svg {
     display: block;
     margin: 3em auto;
     width: 350px;
-    fill: hsl(var(--cursorX), 75%, 75%);
+    fill: hsl(var(--cursorY), 75%, 75%);
   }
   h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
@@ -156,6 +176,16 @@
 <p>By creating a library of single-purpose plugins, CSSplus makes it simple to use only what you need. Each plugin has been designed with the other plugins in mind, so you can use them in tandem in any combination with each other without worry that they will conflict.</p>
 <p>If you're looking for a little <em>more</em> power than what CSSplus offers or you want to use similar functionality in browsers that don't support CSS variables, everything CSSplus does (and more) is also possible with <a href=http://elementqueries.com>EQCSS</a>, a CSS reprocessor that runs all browsers IE8 and up.</p>
 
+<h2 id=plugins>Plugins</h2>
+<p>Included are the following plugins:</p>
+<ul>
+  <li><a href=#aspecty><strong>Aspecty:</strong> an aspect-ratio property</a>
+  <li><a href=#cursory><strong>Cursory:</strong> mouse/touch cursor variables</a>
+  <li><a href=#scrollery><strong>Scrollery:</strong> scroll position variables</a>
+  <li><a href=#selectory><strong>Selectory:</strong> a selector resolver</a>
+  <li><a href=#varsity><strong>Varsity:</strong> scoped variables</a>
+</ul>
+
 <h2 id=how>How to use CSSplus</h2>
 <h3 id=Github>Github</h3>
 <p>You can download CSSPlus from Github: <a href=https://github.com/tomhodgins/cssplus> CSSplus on Github</a></p>
@@ -165,37 +195,59 @@
 <pre><code>const cssplus = require('cssplus')</code></pre>
 <p>This will import all CSSplus plugins and make them available to be used in your own code as:</p>
 <ul>
-  <li><code>cssplus.cursory()</code>
-  <li><code>cssplus.scrollery()</code>
-  <li><code>cssplus.selectory()</code>
-  <li><code>cssplus.varsity()</code>
+  <li><code>cssplus.aspecty</code>
+  <li><code>cssplus.cursory</code>
+  <li><code>cssplus.scrollery</code>
+  <li><code>cssplus.selectory</code>
+  <li><code>cssplus.varsity</code>
 </ul>
 <p>But if you want to include the plugins individually, you can use the <code>module/submodule</code> syntax:</p>
 <pre><code>const selectory = require('cssplus/selectory')</code></pre>
 <p>And this means the Selectory plugin is available to be used in your code as:</p>
-<pre><code>selectory()</code></pre>
+<pre><code>selectory.load()</code></pre>
 
 <h3 id=global>Global JavaScript</h3>
 <p>To include CSSplus plugins globally (outside of a bundler like Webpack or Browserify) you must include a <code>&lt;script></code> tag to each plugin you want to use. If you want to include just Selectory for example you would include just the one file like this:</p>
 <pre><code>&lt;script src=cssplus/selectory.js>&lt;/script></code></pre>
 <p>To include all CSSplus plugins, you'll need to include links to the following files:</p>
 <ul>
+  <li><code>&lt;script src=cssplus/aspecty.js>&lt;/script></code>
   <li><code>&lt;script src=cssplus/cursory.js>&lt;/script></code>
   <li><code>&lt;script src=cssplus/scrollery.js>&lt;/script></code>
   <li><code>&lt;script src=cssplus/selectory.js>&lt;/script></code>
   <li><code>&lt;script src=cssplus/varsity.js>&lt;/script></code>
 </ul>
 
-<h2 id=plugins>Plugins</h2>
-<p>Included are the following plugins:</p>
+<h3 id=aspecty>Aspecty</h3>
+<p>Aspecty is a CSS reprocessor that adds support for an aspect-ratio property using JS. This plugin allows you to define a desired aspect-ratio for an element, based on its rendered width on the page.</p>
+<p>By default, Aspecty will reprocess aspect ratios by watching the following events:</p>
 <ul>
-  <li><a href=#cursory><strong>Cursory:</strong> mouse/touch cursor variables</a>
-  <li><a href=#scrollery><strong>Scrollery:</strong> scroll position variables</a>
-  <li><a href=#selectory><strong>Selectory:</strong> a selector resolver</a>
-  <li><a href=#varsity><strong>Varsity:</strong> scoped variables</a>
+  <li><code>load</code>
+  <li><code>resize</code>
+  <li><code>input</code
+  <li><code>click</code>
 </ul>
+<p>For any element with an aspect ratio defined, event listeners will be added to reprocess the styles on the following events:</p>
+<ul>
+  <li><code>mouseenter</code>
+  <li><code>mouseleave</code>
+  <li><code>mousedown</code>
+  <li><code>mouseup</code>
+  <li><code>focus</code>
+  <li><code>blur</code>
+</ul>
+<p>To run Aspecty whenever you want, use the <code>aspecty.load()</code> function in JS.</p>
+<p>The aspect ratio property can be used in CSS with the property name <code>--aspect-ratio</code> and a ratio, expressed as width and height as unitless numbers, separated by a slash <code>/</code>:</p>
+<pre><code>--aspect-ratio: width/height;</code></pre>
+<p>You can use it in CSS like this:</p>
+<pre><code>div {
+  background: lime;
+  --aspect-ratio: 16/9;
+}</code></pre>
+<p>Aspecty will look through the document for any element matching the selector (in this case <code>div</code>) and create a new rule with a <code>height</code> value calculated based on each matching element's <code>offsetWidth</code> divided by the aspect ratio defined in CSS. To animate the effect of the <code>--aspect-ratio</code> property, which is actually applying via <code>height</code>, it is necessary to set a <code>transform</code> on the <code>height</code> property like this:</p>
+<pre><code>transform: height .2s ease-in-out;</code></pre>
 
-<h3 id=cursory>Cursory <span>v0.0.6</span></h3>
+<h3 id=cursory>Cursory</h3>
 <p>Cursory is a CSS reprocessor that makes the following JS values available as CSS variables:</p>
 <ul>
   <li><code>cursorX</code>
@@ -230,7 +282,7 @@
 }</code></pre>
 <p>Test available at: <a href=test/cursory.html>test/cursory.html</a></p>
 
-<h3 id=scrollery>Scrollery <span>v0.0.6</span></h3>
+<h3 id=scrollery>Scrollery</h3>
 <p>Scrollery is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:</p>
 <ul>
   <li><code>scrollWidth</code>
@@ -253,7 +305,7 @@
 </ul>
 <p>Test available at: <a href=test/scrollery.html>test/scrollery.html</a></p>
 
-<h3 id=selectory>Selectory <span>v0.0.6</span></h3>
+<h3 id=selectory>Selectory</h3>
 <p>Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a <code>[test]</code> attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test <code>1 == 1</code> will always resolve to <code>true</code>, so a selector written for <code>div[test="1 == 1"] {}</code> will always apply to each <code>div</code> element.</p>
 <p>By default, Selectory will reprocess selectors by watching the following events:</p>
 <ul>
@@ -264,11 +316,11 @@
 </ul>
 <p>To run Selectory whenever you want, use the selectory() function in JS.</p>
 <p>Other things you can do with Selectory include, appling a rule to a <code>div</code> when it is wider than <code>300px</code>:</p>
-<pre><code>div[test="this.offsetWidth > 300"] {
+<pre><code>div[test="this.offsetWidth &gt; 300"] {
   background: orange;
 }</code></pre>
 <p>Apply a rule to an input when its <code>value=""</code> attribute is greater than <code>30</code>:</p>
-<pre><code>input[test="this.value > 30"] {
+<pre><code>input[test="this.value &gt; 30"] {
   background: lime;
 }</code></pre>
 <p>Apply a rule to an input when it has a <code>value=""</code> attribute zero characters long:</p>
@@ -276,7 +328,7 @@
   background: purple;
 }</code></pre>
 <p>Apply a rule to an input when its <code>value=""</code> attribute is more than <code>5</code> characters long:</p>
-<pre><code>input[test="5 < this.value.length"] {
+<pre><code>input[test="5 &lt; this.value.length"] {
   background: turquoise;
 }</code></pre>
 <p>Apply a rule to an <code>h3</code> element when it contains at least one <code>span</code> element:</p>
@@ -286,7 +338,7 @@
 <p>It is limited what selectors you can use with Selectory, things like <code>:hover</code> and pseudo-classes tend not to work as well. As well the parsing only allows for 1 test per selector, and complex selectors may not work as intended. Using <code>selector[test=""] {}</code> with a simple selector is best.</p>
 <p>Test available at: <a href=test/selectory.html>test/selectory.html</a></p>
 
-<h3 id=varsity>Varsity <span>v0.0.6</span></h3>
+<h3 id=varsity>Varsity</h3>
 <p>Varsity is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:</p>
 <ul>
   <li><code>offsetWidth</code>

@@ -1,6 +1,13 @@
-const cursory = require('./cursory.js')
+const aspecty   = require('./aspecty.js')
+const cursory   = require('./cursory.js')
 const scrollery = require('./scrollery.js')
 const selectory = require('./selectory.js')
-const varsity = require('./varsity.js')
+const varsity   = require('./varsity.js')
 
-module.exports = { cursory, scrollery, selectory, varsity }
+module.exports = {
+  aspecty,
+  cursory,
+  scrollery,
+  selectory,
+  varsity
+}

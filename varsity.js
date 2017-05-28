@@ -2,7 +2,7 @@
 /*
 
 # Varsity
-## version 0.0.6
+## version 0.0.7
 
 Varsity is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:
 
@@ -77,7 +77,11 @@ License: MIT
 
 }(this, function() {
 
-  const varsity = () => {
+  const varsity = {}
+
+  varsity.style = ''
+
+  varsity.load = () => {
 
     // Find (or create) style tag to populate
     const style_tag = document.querySelector('[data-varsity-style]') || (() => {
@@ -89,39 +93,62 @@ License: MIT
 
     })()
 
-    // Create new CSS string
-    let style = ''
+    varsity.style = ''
 
-    let tag = null
+    varsity.process()
+
+    // Populate style tag with current CSS string
+    style_tag.innerHTML = `:root {\n${varsity.style.replace(/^/gm,'  ')}\n}`
+
+  }
+
+  varsity.process = () => {
+
+    let css_rules = ''
 
     // For each [data-varsity] element
     Array.from(document.querySelectorAll('[data-varsity]'), (tag, i) => {
 
-      // Set the name to the value of the data-varsity="" attribute, or the id="" if there is none
-      let name = (tag.getAttribute('data-varsity') || tag.id || i)
+      css_rules += varsity.transform(tag, i)
 
-      // List properties of element as variables
-      style += `\n\n  /* ${name} */`
-      + `\n  --${name}-offsetWidth: ${tag.offsetWidth};`
-      + `\n  --${name}-offsetHeight: ${tag.offsetHeight};`
-      + `\n  --${name}-offsetLeft: ${tag.offsetLeft};`
-      + `\n  --${name}-offsetTop: ${tag.offsetTop};`
-      + `\n  --${name}-aspect-ratio: ${tag.offsetWidth/tag.offsetHeight};`
-      + `\n  --${name}-characters: ${tag.textContent.length || (tag.value && tag.value.length) || 0};`
-      + `\n  --${name}-children: ${tag.getElementsByTagName('*').length};`
-      + `\n  --${name}-value: ${tag.value || ''};`
     })
 
-    // Populate style tag with current CSS string
-    style_tag.innerHTML = `:root {${style}\n\n}`
+    if (css_rules.length > 0) {
+
+      varsity.style += `\n${css_rules}$\n`
+
+    }
+
+  }
+
+  varsity.transform = (tag, i) => {
+
+    let newRule = ''
+
+    // Set the name to the value of the data-varsity="" attribute, or the id="" if there is none
+    let name = (tag.getAttribute('data-varsity') || tag.id || i)
+
+    // List properties of element as variables
+    newRule = `/* ${name} */`
+    + `\n--${name}-offsetWidth: ${tag.offsetWidth};`
+    + `\n--${name}-offsetHeight: ${tag.offsetHeight};`
+    + `\n--${name}-offsetLeft: ${tag.offsetLeft};`
+    + `\n--${name}-offsetTop: ${tag.offsetTop};`
+    + `\n--${name}-aspect-ratio: ${tag.offsetWidth/tag.offsetHeight};`
+    + `\n--${name}-characters: ${tag.textContent.length || (tag.value && tag.value.length) || 0};`
+    + `\n--${name}-children: ${tag.getElementsByTagName('*').length};`
+    + `\n--${name}-value: ${tag.value || ''};`
+    + '\n'
+
+    return newRule
 
   }
 
   // Update every `load`, `resize`, `input`, and `click`
-  window.addEventListener('load', varsity)
-  window.addEventListener('resize', varsity)
-  window.addEventListener('input', varsity)
-  window.addEventListener('click', varsity)
+  window.addEventListener('load', varsity.load)
+  window.addEventListener('resize', varsity.load)
+  window.addEventListener('input', varsity.load)
+  window.addEventListener('click', varsity.load)
 
   return varsity
 

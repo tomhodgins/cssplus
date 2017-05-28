@@ -2,7 +2,7 @@
 /*
 
 # Scrollery
-## version 0.0.6
+## version 0.0.7
 
 Scrollery is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:
 
@@ -47,7 +47,11 @@ License: MIT
 
 }(this, function() {
 
-  const scrollery = () => {
+  const scrollery = {}
+
+  scrollery.style = ''
+
+  scrollery.load = () => {
 
     // Find (or create) style tag to populate
     const style_tag = document.querySelector('[data-scrollery-style]') || (() => {
@@ -59,9 +63,23 @@ License: MIT
 
     })()
 
-    // Add scroll event listeners on elements with [data-scrollery] attribute
-    Array.from(document.querySelectorAll('[data-scrollery]'), tag => {
+    scrollery.style = ''
 
+    scrollery.process()
+
+    // Populate style tag with current CSS string
+    style_tag.innerHTML = `:root {\n${scrollery.style.replace(/^/gm,'  ')}\n}`
+
+  }
+
+  scrollery.process = () => {
+
+    let css_rules = ''
+
+    // For each [data-scrollery] element
+    Array.from(document.querySelectorAll('[data-scrollery]'), (tag, i) => {
+
+      // Add scroll event listeners on elements with [data-scrollery] attribute
       // If we haven't added an event listener yet
       if (tag.getAttribute('data-scrollery-listen') !== true) {
 
@@ -69,12 +87,12 @@ License: MIT
         if (tag === document.documentElement || tag === document.body) {
 
           // watch `scroll` on `window`
-          window.addEventListener('scroll', scrollery)
+          window.addEventListener('scroll', scrollery.load)
 
         } else {
 
           // Otherwise listen to the `scroll` event on the element
-          tag.addEventListener('scroll', scrollery)
+          tag.addEventListener('scroll', scrollery.load)
 
         }
 
@@ -83,47 +101,52 @@ License: MIT
 
       }
 
+      css_rules += scrollery.transform(tag, i)
+
     })
 
-    // Create new CSS string
-    let style = ''
+    if (css_rules.length > 0) {
 
-    let tag = null
+      scrollery.style += css_rules
 
-    // For each [data-varsity] element
-    Array.from(document.querySelectorAll('[data-scrollery]'), (tag, i) => {
+    }
 
-      // Set the name to the value of the data-varsity="" attribute, or the id="" if there is none
-      let name = (tag.getAttribute('data-scrollery') || tag.id || i)
+  }
 
-      // Find current scrollHeight
-      let origHeight = tag.style.height
-      tag.style.height = 'auto'
-      let newScrollHeight = tag.scrollHeight
-      tag.style.height = origHeight
+  scrollery.transform = tag => {
 
-      // Find current scrollWidth
-      let origWidth = tag.style.width
-      tag.style.width = 'auto'
-      let newScrollWidth = tag.scrollWidth
-      tag.style.width = origWidth
+    let newRule = ''
 
-      // List properties of element as variables
-      style += `\n\n  /* ${name} */`
-      + `\n  --${name}-scrollWidth: ${newScrollWidth};`
-      + `\n  --${name}-scrollHeight: ${newScrollHeight};`
-      + `\n  --${name}-scrollLeft: ${tag.scrollLeft};`
-      + `\n  --${name}-scrollTop: ${tag.scrollTop};`
-    })
+    // Set the name to the value of the data-varsity="" attribute, or the id="" if there is none
+    let name = (tag.getAttribute('data-scrollery') || tag.id || i)
 
-    // Populate style tag with current CSS string
-    style_tag.innerHTML = `:root {${style}\n\n}`
+    // Find current scrollHeight
+    let origHeight = tag.style.height
+    tag.style.height = 'auto'
+    let newScrollHeight = tag.scrollHeight
+    tag.style.height = origHeight
+
+    // Find current scrollWidth
+    let origWidth = tag.style.width
+    tag.style.width = 'auto'
+    let newScrollWidth = tag.scrollWidth
+    tag.style.width = origWidth
+
+    // List properties of element as variables
+    newRule += `\n/* ${name} */`
+    + `\n--${name}-scrollWidth: ${newScrollWidth};`
+    + `\n--${name}-scrollHeight: ${newScrollHeight};`
+    + `\n--${name}-scrollLeft: ${tag.scrollLeft};`
+    + `\n--${name}-scrollTop: ${tag.scrollTop};`
+    + '\n'
+
+    return newRule
 
   }
 
   // Update every `load`
-  window.addEventListener('load', scrollery)
-  window.addEventListener('resize', scrollery)
+  window.addEventListener('load', scrollery.load)
+  window.addEventListener('resize', scrollery.load)
 
   return scrollery
 

@@ -2,7 +2,7 @@
 /*
 
 # Selectory
-## version 0.0.6
+## version 0.0.7
 
 Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a `[test]` attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test `1 == 1` will always resolve to `true`, so a selector written for `div[test="1 == 1"] {}` will always apply to each `div` element.
 
@@ -13,7 +13,7 @@ By default, Selectory will reprocess selectors by watching the following events:
 - `input`
 - `click`
 
-To run Selectory whenever you want, use the `selectory()` function in JS.
+To run Selectory whenever you want, use the `selectory.load()` function in JS.
 
 - https://github.com/tomhodgins/cssplus
 
@@ -47,9 +47,11 @@ License: MIT
 
 }(this, function() {
 
-  let style = ''
+  const selectory = {}
 
-  const selectory = () => {
+  selectory.style = ''
+
+  selectory.load = () => {
 
     // Find (or create) style tag to populate
     const style_tag = document.querySelector('[data-selectory-style]') || (() => {
@@ -61,16 +63,16 @@ License: MIT
 
     })()
 
-    style = ''
+    selectory.style = ''
 
-    findRules()
+    selectory.findRules()
 
     // Populate style tag with style
-    style_tag.innerHTML = `\n${style}\n`
+    style_tag.innerHTML = `\n${selectory.style}\n`
 
   }
 
-  const findRules = () => {
+  selectory.findRules = () => {
 
     // For each stylesheet
     Array.from(document.styleSheets, sheet => {
@@ -78,7 +80,7 @@ License: MIT
       // For each rule
       sheet.cssRules && Array.from(sheet.cssRules, rule => {
 
-        process(rule)
+        selectory.process(rule)
 
       })
 
@@ -86,22 +88,16 @@ License: MIT
 
   }
 
-  const process = rule => {
+  selectory.process = rule => {
 
-    // If global rule
+    // If rule is a qualified rule, process it
     if (rule.type === 1) {
 
-      newRule = transform(rule)
-
-      if (newRule.length > 0) {
-
-        style += `${newRule}\n`
-
-      }
+      selectory.style += selectory.transform(rule)
 
     }
 
-    // If rule is a media query, loop through to find all rules
+    // If rule is an at-rule, find all qualified rules inside
     if (rule.type === 4) {
 
       let css_rules = ''
@@ -109,18 +105,17 @@ License: MIT
       // Remember media query text
       let mediaText = rule.media.mediaText
 
-      // If there are rules, find all rules
+      // If there are qualified rules, find all rules
       rule.cssRules && Array.from(rule.cssRules, mediaRule => {
 
-        css_rules += transform(mediaRule)
+        css_rules += selectory.transform(mediaRule)
 
       })
 
-      // Add all rules from media query to css
-
+      // If there is at least one new rule, wrap in at-rule with media text
       if (css_rules.length > 0) {
 
-        style += `  @media ${mediaText} {\n${css_rules.replace(/^(.*)$/gmi,'  $1')}\n  }\n`
+        selectory.style += `\n@media ${mediaText} {\n  ${css_rules.replace(/^(.*)$/gmi,'  $1')}\n}\n`
 
       }
 
@@ -128,7 +123,9 @@ License: MIT
 
   }
 
-  const transform = rule => {
+  selectory.transform = rule => {
+
+    let newRule = ''
 
     let selector = rule.selectorText.replace(/(.*)\s{/gi, '$1')
     let ruleText = rule.cssText.replace(/.*\{(.*)\}/gi, '$1')
@@ -136,7 +133,7 @@ License: MIT
     // Start a new list of matching selectors
     let selectorList = ''
 
-    // Create a new attribute for elements that match this
+    // Create a new attribute to identify matching elements
     let attr = ''
 
     // If `[test=` is present anywhere in the selector
@@ -157,15 +154,17 @@ License: MIT
           // Run the test with our matching element
           if (func.call(tag)) {
 
-            attr = 'data-' + selectorText.replace(/[\#\.\[\]\=\"\'\^\*\$\:\s]/g,'-')
+            // Create an attribute based on the selector
+            attr = 'data-' + selector.replace(/[\s\'\"\=\>\[\]\~\^\$\*\:\(\)\#\.\+]/g, '-')
 
+            // Create a new selector for our new CSS rule
             var newSelector = selector.replace(/^(.*\[)(test=(?:".*"|'.*'))(\])/i, (string, before, test, after) => {
 
               return before + attr + '="' + i + '"' + after
 
             })
 
-            // If true, add a new attribute to our element
+            // Mark matching element with attribute and number
             tag.setAttribute(attr, i)
 
             // And add our new attribute to the selector list for that rule
@@ -181,23 +180,21 @@ License: MIT
     }
 
     // If at least one element passed the test
-    if (0 < selectorList.length) {
+    if (selectorList.length > 0) {
 
-        return `\n  /* ${attr} */\n  ${selectorList} {\n   ${ruleText.replace(/(; )([^\{])/g,';\n    $2')}\n  }\n`
-
-    } else {
-
-      return ''
+        newRule =  `\n/* ${selector} */\n${selectorList} {\n   ${ruleText.replace(/(; )([^\{])/g,';\n  $2')}\n}\n`
 
     }
+
+    return newRule
 
   }
 
   // Update every `load`, `resize`, `input`, and `click`
-  window.addEventListener('load', selectory)
-  window.addEventListener('resize', selectory)
-  window.addEventListener('input', selectory)
-  window.addEventListener('click', selectory)
+  window.addEventListener('load', selectory.load)
+  window.addEventListener('resize', selectory.load)
+  window.addEventListener('input', selectory.load)
+  window.addEventListener('click', selectory.load)
 
   return selectory
 

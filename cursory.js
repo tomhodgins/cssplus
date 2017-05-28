@@ -2,7 +2,7 @@
 /*
 
 # Cursory
-## version 0.0.6
+## version 0.0.7
 
 Cursory is a CSS reprocessor that makes the following JS values available as CSS variables:
 
@@ -61,46 +61,87 @@ License: MIT
 
 }(this, function(e) {
 
-  const cursory = (e) => {
+  const cursory = {}
 
-    const html = document.documentElement
+  cursory.style = ''
 
-    // Find current cursor position
-    html.style.setProperty('--cursorX', e.clientX || (e.touches ? e.touches[0].clientX : innerWidth/2))
-    html.style.setProperty('--cursorY', e.clientY || ( e.touches ? e.touches[0].clientY : innerHeight/2))
-    html.style.setProperty('--innerWidth', innerWidth)
-    html.style.setProperty('--innerHeight', innerHeight)
-    html.style.setProperty('--clicked', clicked)
+  cursory.load = (e) => {
+
+    // Find (or create) style tag to populate
+    const style_tag = document.querySelector('[data-cursory-style]') || (() => {
+
+      const tag = document.createElement('style')
+      tag.setAttribute('data-cursory-style', '')
+      document.head.appendChild(tag)
+      return tag
+
+    })()
+
+    cursory.style = ''
+
+    cursory.process(e)
+
+    // Populate style tag with current CSS string
+    style_tag.innerHTML = `:root {\n${cursory.style.replace(/^/gm,'  ')}\n}`
+
+  }
+
+  cursory.process = e => {
+
+    let newRule = cursory.transform(e)
+
+    if (newRule.length > 0) {
+
+      cursory.style = newRule
+
+    }
+
+  }
+
+  cursory.transform = e => {
+
+    let newRule = ''
+
+    // List cursor position, window dimensions, and click status
+    newRule += `\n--cursorX: ${e.clientX || (e.touches ? e.touches[0].clientX : innerWidth/2)};`
+    + `\n--cursorY: ${e.clientY || ( e.touches ? e.touches[0].clientY : innerHeight/2)};`
+    + `\n--innerWidth: ${innerWidth};`
+    + `\n--innerHeight: ${innerHeight};`
+    + `\n--clicked: ${cursory.clicked};`
+    + '\n'
+
+    return newRule
 
   }
 
   // Set status of `clicked` variable
-  let clicked = 0
+  cursory.clicked = 0
 
-  const startClick = (e) => {
-    clicked = 1
-    cursory(e)
+  cursory.startClick = e => {
+    cursory.clicked = 1
+    cursory.load(e)
   }
 
-  const endClick = (e) => {
-    clicked = 0
-    cursory(e)
+  cursory.endClick = e => {
+    cursory.clicked = 0
+    cursory.load(e)
   }
 
-  // Update on `load`
-  window.addEventListener('load', cursory)
+  // Update on `load` and `resize`
+  window.addEventListener('load', cursory.load)
+  window.addEventListener('resize', cursory.load)
 
-  // Update every `mousemove`, `touchstart, and `touchmove`
-  window.addEventListener('mousemove', cursory)
-  window.addEventListener('touchmove', cursory)
+  // Update every `mousemove` and `touchmove`
+  window.addEventListener('mousemove', cursory.load)
+  window.addEventListener('touchmove', cursory.load)
 
   // Start click on `mousedown` and `touchstart`
-  window.addEventListener('mousedown', startClick)
-  window.addEventListener('touchstart', startClick)
+  window.addEventListener('mousedown', cursory.startClick)
+  window.addEventListener('touchstart', cursory.startClick)
 
   // End click on `mouseup` and `touchend`
-  window.addEventListener('mouseup', endClick)
-  window.addEventListener('touchend', endClick)
+  window.addEventListener('mouseup', cursory.endClick)
+  window.addEventListener('touchend', cursory.endClick)
 
   return cursory
 

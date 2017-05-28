@@ -8,6 +8,7 @@ The plugins are designed to be used in tandem, though it's possible to pick and 
 
 Included are the following plugins:
 
+- [**Aspecty:** aspect ratio property](#aspecty-an-aspect-ratio-property)
 - [**Cursory:** mouse/touch cursor variables](#cursory-mousetouch-cursor-variables)
 - [**Scrollery:** scroll position variables](#scrollery-scroll-position-variables)
 - [**Selectory:** a selector resolver](#selectory-a-selector-resolver)
@@ -26,10 +27,11 @@ const cssplus = require('cssplus')
 
 This will import all CSSplus plugins and make them available to be used in your own code as:
 
-- `cssplus.cursory()`
-- `cssplus.scrollery()`
-- `cssplus.selectory()`
-- `cssplus.varsity()`
+- `cssplus.aspecty`
+- `cssplus.cursory`
+- `cssplus.scrollery`
+- `cssplus.selectory`
+- `cssplus.varsity`
 
 But if you want to include the plugins individually, you can use the `module/submodule` syntax:
 
@@ -40,7 +42,7 @@ const selectory = require('cssplus/selectory')
 And this means the Selectory plugin is available to be used in your code as:
 
 ```javascript
-selectory()
+selectory.load()
 ```
 
 
@@ -55,12 +57,56 @@ To include CSSplus plugins globally (outside of a bundler like Webpack or Browse
 To include all CSSplus plugins, you'll need to include links to the following files:
 
 ```html
+<script src=cssplus/aspecty.js></script>
 <script src=cssplus/cursory.js></script>
 <script src=cssplus/scrollery.js></script>
 <script src=cssplus/selectory.js></script>
 <script src=cssplus/varsity.js></script>
 ```
 
+
+## Aspecty: an aspect ratio property
+
+Aspecty is a CSS reprocessor that adds support for an aspect-ratio property using JS. This plugin allows you to define a desired aspect-ratio for an element, based on its rendered width on the page.
+
+For any element with an aspect ratio defined, event listeners will be added to reprocess the styles on the following events:
+
+- `mouseenter`
+- `mouseleave`
+- `mousedown`
+- `mouseup`
+- `focus`
+- `blur`
+
+By default, Aspecty will reprocess aspect ratios by watching the following events:
+
+- `load`
+- `resize`
+- `input`
+- `click`
+
+To run Aspecty whenever you want, use the `aspecty.load()` function in JS.
+
+The aspect ratio property can be used in CSS with the property name `--aspect-ratio` and a ratio, expressed as width and height as unitless numbers, separated by a slash `/`:
+
+```css
+--aspect-ratio: width/height;
+```
+
+You can use it in CSS like this:
+
+```css
+div {
+  background: lime;
+  --aspect-ratio: 16/9;
+}
+```
+
+Aspecty will look through the document for any element matching the selector (in this case `div`) and create a new rule with a `height` value calculated based on each matching element's `offsetWidth` divided by the aspect ratio defined in CSS. To animate the effect of the `--aspect-ratio` property, which is actually applying via `height`, it is necessary to set a `transform` on the `height` property like this:
+
+```css
+transform: height .2s ease-in-out;
+```
 
 ## Cursory: mouse/touch cursor variables
 
@@ -87,7 +133,7 @@ These variables are updated at the following events:
 
 In addition, the `--clicked` variable is changed from `0` to `1` between the `mousedown` and `touchstart` events and the corresponding `mouseup` or `touchend` events. This allows you to use the `var(--clicked)` ratio as a `1` or `0` in your CSS `calc()` functions, or as a value for `opacity:;` fairly easily.
 
-To run Cursory whenever you want, use the `cursory()` function in JS.
+To run Cursory whenever you want, use the `cursory.load()` function in JS.
 
 To make an element like `div` follow the cursor position when using `cursory`, use CSS with variables like this:
 
@@ -118,7 +164,7 @@ To have `scrollery` watch an element, you need to give that element a unique ide
 
 By default, Scrollery will watch 0 elements. If you add a `data-scrollery` attribute to either the `<html>` or `<body>` element it will attach an event listener for the `scroll` event on the `window`, otherwise if you add the `data-scrollery` attribute to other elements it will add a `scroll` listener to that element.
 
-To run Scrollery whenever you want, use the `scrollery()` function in JS.
+To run Scrollery whenever you want, use the `scrollery.load()` function in JS.
 
 ```html
 <div id=example data-scrollery></div>
@@ -151,7 +197,7 @@ By default, Selectory will reprocess selectors by watching the following events:
 - `input`
 - `click`
 
-To run Selectory whenever you want, use the `selectory()` function in JS.
+To run Selectory whenever you want, use the `selectory.load()` function in JS.
 
 Other things you can do with Selectory include:
 
@@ -222,7 +268,7 @@ By default, Varsity will reprocess selectors by watching the following events:
 - `input`
 - `click`
 
-To run Varsity whenever you want, use the `varsity()` function in JS.
+To run Varsity whenever you want, use the `varsity.load()` function in JS.
 
 To have `varsity` watch an element, you need to give that element a unique identifier, as well as add the `data-varsity` attribute. The plugin will use either the value of the `data-varsity` attribute, or else the value of the `id` (if defined) for an element.
 
