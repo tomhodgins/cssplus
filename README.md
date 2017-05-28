@@ -102,10 +102,10 @@ div {
 }
 ```
 
-Aspecty will look through the document for any element matching the selector (in this case `div`) and create a new rule with a `height` value calculated based on each matching element's `offsetWidth` divided by the aspect ratio defined in CSS. To animate the effect of the `--aspect-ratio` property, which is actually applying via `height`, it is necessary to set a `transform` on the `height` property like this:
+Aspecty will look through the document for any element matching the selector (in this case `div`) and create a new rule with a `height` value calculated based on each matching element's `offsetWidth` divided by the aspect ratio defined in CSS. To animate the effect of the `--aspect-ratio` property, which is actually applying via `height`, it is necessary to set a `transition` on the `height` property like this:
 
 ```css
-transform: height .2s ease-in-out;
+transition: height .2s ease-in-out;
 ```
 Test available at: [test/aspecty.html](http://tomhodgins.github.io/cssplus/test/aspecty.html)
 
