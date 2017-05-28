@@ -107,6 +107,7 @@ Aspecty will look through the document for any element matching the selector (in
 ```css
 transform: height .2s ease-in-out;
 ```
+Test available at: [test/aspecty.html](http://tomhodgins.github.io/cssplus/test/aspecty.html)
 
 ## Cursory: mouse/touch cursor variables
 

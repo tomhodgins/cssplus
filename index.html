@@ -246,6 +246,7 @@
 }</code></pre>
 <p>Aspecty will look through the document for any element matching the selector (in this case <code>div</code>) and create a new rule with a <code>height</code> value calculated based on each matching element's <code>offsetWidth</code> divided by the aspect ratio defined in CSS. To animate the effect of the <code>--aspect-ratio</code> property, which is actually applying via <code>height</code>, it is necessary to set a <code>transform</code> on the <code>height</code> property like this:</p>
 <pre><code>transform: height .2s ease-in-out;</code></pre>
+<p>Test available at: <a href=test/aspecty.html>test/aspecty.html</a></p>
 
 <h3 id=cursory>Cursory</h3>
 <p>Cursory is a CSS reprocessor that makes the following JS values available as CSS variables:</p>
