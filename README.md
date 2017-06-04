@@ -13,9 +13,10 @@ Included are the following plugins:
 - [**Scrollery:** scroll position variables](#scrollery-scroll-position-variables)
 - [**Selectory:** a selector resolver](#selectory-a-selector-resolver)
 - [**Varsity:** scoped variables](#varsity-scoped-variables)
-
+- [**Xpathy:** XPath selectors in CSS](#xpathy-xpath-selectors-in-css)
 
 ## Usage
+
 
 ### NPM
 
@@ -32,6 +33,7 @@ This will import all CSSplus plugins and make them available to be used in your 
 - `cssplus.scrollery`
 - `cssplus.selectory`
 - `cssplus.varsity`
+- `cssplus.xpathy`
 
 But if you want to include the plugins individually, you can use the `module/submodule` syntax:
 
@@ -62,6 +64,7 @@ To include all CSSplus plugins, you'll need to include links to the following fi
 <script src=cssplus/scrollery.js></script>
 <script src=cssplus/selectory.js></script>
 <script src=cssplus/varsity.js></script>
+<script src=cssplus/xpathy.js></script>
 ```
 
 
@@ -235,7 +238,7 @@ input[test="5 < this.value.length"] {
 }
 ```
 
-Apply a rule to an `h3` element when it contains at least one `span` element
+Apply a rule to an `h3` element when it contains at least one `span` element:
 
 ```css
 h3[test="(this.querySelector('span'))"] {
@@ -246,7 +249,6 @@ h3[test="(this.querySelector('span'))"] {
 It is limited what selectors you can use with Selectory, things like `:hover` and pseudo-classes tend not to work as well. As well the parsing only allows for 1 test per selector, and complex selectors may not work as intended. Using `selector[test=""] {}` with a simple selector is best.
 
 Test available at: [test/selectory.html](http://tomhodgins.github.io/cssplus/test/selectory.html)
-
 
 
 ## Varsity: scoped variables
@@ -295,6 +297,82 @@ Once the plugin is aware of an element to watch, and the unique name of that ele
 - `--example-value`
 
 Test available at: [test/varsity.html](http://tomhodgins.github.io/cssplus/test/varsity.html)
+
+
+## XPathy: XPath selectors in CSS
+
+XPathy is a CSS reprocessor that resolves selectors using XPath. This plugin will read CSS selectors that end with a `[xpath]` attribute and use JavaScript and XPath to determine whether or not to apply that style to elements matching the other part of that selector. For example, the XPath selector `//div` will always resolve to `div`, so a selector written for `div [xpath="//div"] {}` will always apply to each `div div {}` element.
+
+By default, XPathy will reprocess selectors by watching the following events:
+
+- `load`
+- `resize`
+- `input`
+- `click`
+
+To run XPathy whenever you want, use the `xpathy.load()` function in JS.
+
+Other things you can do with XPathy include:
+
+Select all `span` tags with the XPath `//span`:
+
+```css
+[xpath="//span"] {
+  color: violet;
+}
+```
+
+Select all elements with a class name of `demo-class` with the XPath `//*[@class='demo-class']`:
+
+```css
+[xpath="//*[@class='demo-class']"] {
+  color: lime;
+}
+```
+
+Select an element with a text content of 'Demo Content' with the XPath `//*[text()='Demo Content']`:
+
+```css
+[xpath="//*[text()='Demo Content']"] {
+  color: violet;
+}
+```
+
+Select the parent element of another element with the XPath `/..`:
+
+```css
+[xpath="//*[@class='child']/.."] {
+  border: 1px solid lime;
+}
+```
+
+Compare attribute values as numbers with operators like `>` and `&lt;`:
+
+```css
+[xpath="//*[@data-price > 3]"] {
+  color: violet;
+}
+```
+
+Select elements based on the number of children they contain with an XPath like `//ul[li[4]]`:
+
+```css
+[xpath="//ul[li[4]]"] {
+  color: lime;
+}
+```
+
+Test available at: [test/xpathy.html](http://tomhodgins.github.io/cssplus/test/xpathy.html)
+
+
+## Browser support
+
+These plugins are written in ES6, and intended to be used in modern browsers (Chrome, Safari, Firefox, Edge) without transpilation. Many of these plugins make use of CSS Custom Properties (CSS variables) for functionality, so any browser that doesn't support these features will have trouble with.
+
+As far as I am aware, the only browser that supports CSS Custom Properties but not the ES6 features used (where transpiling to ES5 might improve support) is for Mobile Safari (iOS) support.
+
+Currently all of these plugins are under active development and things are shifting around quite a bit so browser support may change with each release.
+
 
 ## Demos
 

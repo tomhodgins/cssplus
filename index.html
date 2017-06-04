@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <meta name=description content="CSSplus is a family of CSS reprocessor plugins that give you more power when writing CSS.">
-<meta name=keywords content="cssplus, css reprocessor, reprocessor, plugin, polyfill, aspecty, cursory, scrollery, selectory, varsity, element queries, container queries, scoped styles, css variables, variables, parent selector, attribute">
+<meta name=keywords content="cssplus, css reprocessor, reprocessor, plugin, polyfill, aspecty, cursory, scrollery, selectory, varsity, xpathy element queries, container queries, scoped styles, css variables, variables, parent selector, attribute">
 <link href="https://fonts.googleapis.com/css?family=Fruktur|Source+Code+Pro:400,500,600,700,900|Source+Sans+Pro:400,400i,600,600i,700,700i,900,900i" rel=stylesheet>
 <title>CSSplus - A family of CSS Reprocessor Plugins</title>
 
@@ -184,6 +184,7 @@
   <li><a href=#scrollery><strong>Scrollery:</strong> scroll position variables</a>
   <li><a href=#selectory><strong>Selectory:</strong> a selector resolver</a>
   <li><a href=#varsity><strong>Varsity:</strong> scoped variables</a>
+  <li><a href=#xpathy><strong>XPathy:</strong> Xpath selectors in CSS</a>
 </ul>
 
 <h2 id=how>How to use CSSplus</h2>
@@ -200,6 +201,7 @@
   <li><code>cssplus.scrollery</code>
   <li><code>cssplus.selectory</code>
   <li><code>cssplus.varsity</code>
+  <li><code>cssplus.xpathy</code>
 </ul>
 <p>But if you want to include the plugins individually, you can use the <code>module/submodule</code> syntax:</p>
 <pre><code>const selectory = require('cssplus/selectory')</code></pre>
@@ -216,6 +218,7 @@
   <li><code>&lt;script src=cssplus/scrollery.js>&lt;/script></code>
   <li><code>&lt;script src=cssplus/selectory.js>&lt;/script></code>
   <li><code>&lt;script src=cssplus/varsity.js>&lt;/script></code>
+  <li><code>&lt;script src=cssplus/xpathy.js>&lt;/script></code>
 </ul>
 
 <h3 id=aspecty>Aspecty</h3>
@@ -224,7 +227,7 @@
 <ul>
   <li><code>load</code>
   <li><code>resize</code>
-  <li><code>input</code
+  <li><code>input</code>
   <li><code>click</code>
 </ul>
 <p>For any element with an aspect ratio defined, event listeners will be added to reprocess the styles on the following events:</p>
@@ -375,6 +378,43 @@
   <li><code>--example-value</code>
 </ul>
 <p>Test available at: <a href=test/varsity.html>test/varsity.html</a></p>
+
+<h2 id=xpathy>XPathy</h2>
+<p>XPathy is a CSS reprocessor that resolves selectors using XPath. This plugin will read CSS selectors that end with a <code>[xpath]</code> attribute and use JavaScript and XPath to determine whether or not to apply that style to elements matching the other part of that selector. For example, the XPath selector <code>//div</code> will always resolve to <code>div</code>, so a selector written for <code>div [xpath="//div"] {}</code> will always apply to each <code>div div {}</code> element.</p>
+<p>By default, XPathy will reprocess selectors by watching the following events:</p>
+<ul>
+  <li><code>load</code>
+  <li><code>resize</code>
+  <li><code>input</code>
+  <li><code>click</code>
+</ul>
+<p>To run XPathy whenever you want, use the <code>xpathy.load()</code> function in JS.</p>
+<p>Other things you can do with XPathy include:</p>
+<p>Select all <code>span</code> tags with the XPath <code>//span</code>:</p>
+<pre><code>[xpath="//span"] {
+  color: violet;
+}</code></pre>
+<p>Select all elements with a class name of <code>demo-class</code> with the XPath <code>//*[@class='demo-class']</code>:</p>
+<pre><code>[xpath="//*[@class='demo-class']"] {
+  color: lime;
+}</code></pre>
+<p>Select an element with a text content of <code>Demo Content</code> with the XPath <code>//*[text()='Demo Content']</code>:</p>
+<pre><code>[xpath="//*[text()='Demo Content']"] {
+  color: violet;
+}</code></pre>
+<p>Select the parent element of another element with the XPath <code>/..</code>:</p>
+<pre><code>[xpath="//*[@class='child']/.."] {
+  border: 1px solid lime;
+}</code></pre>
+<p>Compare attribute values as numbers with operators like <code>></code> and <code>&lt;</code>:</p>
+<pre><code>[xpath="//*[@data-price > 3]"] {
+  color: violet;
+}</code></pre>
+<p>Select elements based on the number of children they contain with an XPath like <code>//ul[li[4]]</code>:</p>
+<pre><code>[xpath="//ul[li[4]]"] {
+  color: lime;
+}</code></pre>
+<p>Test available at: <a href=http://tomhodgins.github.io/cssplus/test/xpathy.html>test/xpathy.html</a></p>
 
 <h2 id=demos>Demos</h2>
 

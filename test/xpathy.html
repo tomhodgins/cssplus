@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<h2>Selecting by tag name</h2>
+<aside>
+  <span>I'm a span!</span>
+</aside>
+
+<h2>Selecting by attribute</h2>
+<aside>
+  <div class="demo-class">class="demo-class"</div>
+</aside>
+
+<h2>Selecting by text content</h2>
+<aside>
+  <div>Demo Content</div>
+</aside>
+
+<h2>Selecting parent element</h2>
+<aside>
+  Parent
+  <aside class=child>Child</aside>
+</aside>
+
+<h2>Compare attribute value as numbers</h2>
+<aside>
+  <ul>
+    <li data-price=2>Coffee
+    <li data-price=10>Pizza
+    <li data-price=4>Ice cream
+  </ul>
+</aside>
+
+<h2>Counting children</h2>
+<aside>
+  <p>List</p>
+  <ul>
+    <li>item
+    <li>item
+    <li>item
+  </ul>
+  <p>List</p>
+  <ul>
+    <li>item
+    <li>item
+    <li>item
+    <li>item
+  </ul>
+  <p>List</p>
+  <ul>
+    <li>item
+    <li>item
+    <li>item
+    <li>item
+    <li>item
+  </ul>
+</aside>
+
+<style>
+  aside {
+    padding: 1em;
+    border: 1px solid #666;
+  }
+
+  /* Selecting by tag name */
+  [xpath="//span"] {
+    color: violet;
+  }
+
+  /* Selecting by class */
+  [xpath="//*[@class='demo-class']"] {
+    color: lime;
+  }
+
+  /* Selecting by text content */
+  [xpath="//*[text()='Demo Content']"] {
+    color: violet;
+  }
+
+  /* Selecting parent element */
+  [xpath="//*[@class='child']/.."] {
+    border: 1px solid lime;
+  }
+
+  /* Compare attribute value as numbers */
+  [xpath="//*[@data-price > 3]"] {
+    color: violet;
+  }
+
+  /* Counting children */
+  [xpath="//ul[li[4]]"] {
+    color: lime;
+  }
+</style>
+
+<script src=../xpathy.js></script>

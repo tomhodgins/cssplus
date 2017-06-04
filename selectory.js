@@ -2,7 +2,7 @@
 /*
 
 # Selectory
-## version 0.0.7
+## version 0.0.8
 
 Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a `[test]` attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test `1 == 1` will always resolve to `true`, so a selector written for `div[test="1 == 1"] {}` will always apply to each `div` element.
 
@@ -50,6 +50,7 @@ License: MIT
   const selectory = {}
 
   selectory.style = ''
+  selectory.count = 0
 
   selectory.load = () => {
 
@@ -63,7 +64,16 @@ License: MIT
 
     })()
 
+    // Reset plugin styles and element count
     selectory.style = ''
+    selectory.count = 0
+
+    // Reset count on [data-selectory] elements in DOM
+    Array.from(document.querySelectorAll('[data-selectory]'), tag => {
+
+      tag.setAttribute('data-selectory', '')
+
+    })
 
     selectory.findRules()
 
@@ -131,10 +141,7 @@ License: MIT
     let ruleText = rule.cssText.replace(/.*\{(.*)\}/gi, '$1')
 
     // Start a new list of matching selectors
-    let selectorList = ''
-
-    // Create a new attribute to identify matching elements
-    let attr = ''
+    let selectorList = []
 
     // If `[test=` is present anywhere in the selector
     if (selector && selector.indexOf('[test=') !== -1) {
@@ -144,6 +151,7 @@ License: MIT
 
         // Use asterisk (*) if selectorText is an empty string
         selectorText = selectorText === '' ? '*' : selectorText
+        console.log(selectorText)
 
         // For each tag matching the selector (minus the test)
         Array.from(document.querySelectorAll(selectorText), (tag, i) => {
@@ -154,22 +162,21 @@ License: MIT
           // Run the test with our matching element
           if (func.call(tag)) {
 
-            // Create an attribute based on the selector
-            attr = 'data-' + selector.replace(/[\s\'\"\=\>\[\]\~\^\$\*\:\(\)\#\.\+]/g, '-')
+            // Increment the plugin element count
+            selectory.count++
 
             // Create a new selector for our new CSS rule
             var newSelector = selector.replace(/^(.*\[)(test=(?:".*"|'.*'))(\])/i, (string, before, test, after) => {
 
-              return before + attr + '="' + i + '"' + after
+              return `${before}data-selectory="${selectory.count}"${after}`
 
             })
 
-            // Mark matching element with attribute and number
-            tag.setAttribute(attr, i)
+            // Mark matching element with attribute and plugin element count
+            tag.setAttribute('data-selectory', selectory.count)
 
             // And add our new attribute to the selector list for that rule
-            const comma = selectorList.length == 0 ? '' : ',\n  '
-            selectorList += comma + newSelector
+            selectorList.push(newSelector)
 
           }
 

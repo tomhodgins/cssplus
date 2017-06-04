@@ -2,7 +2,7 @@
 /*
 
 # Aspecty
-## version 0.0.7
+## version 0.0.8
 
 Aspecty is a CSS reprocessor that adds support for an aspect-ratio property using JS. This plugin allows you to define a desired aspect-ratio for an element, based on its rendered width on the page.
 
@@ -72,6 +72,7 @@ License: MIT
   const aspecty = {}
 
   aspecty.style = ''
+  aspecty.count = 0
 
   aspecty.load = () => {
 
@@ -85,7 +86,16 @@ License: MIT
 
     })()
 
+    // Reset plugin styles and element count
     aspecty.style = ''
+    aspecty.count = 0
+
+    // Reset count on [data-aspecty] elements in DOM
+    Array.from(document.querySelectorAll('[data-aspecty]'), tag => {
+
+      tag.setAttribute('data-aspecty', '')
+
+    })
 
     aspecty.findRules()
 
@@ -147,19 +157,15 @@ License: MIT
 
   aspecty.transform = rule => {
 
+    let newRule = ''
+
     let selector = rule.selectorText.replace(/(.*)\s{/gi, '$1')
     let ruleText = rule.cssText.replace(/.*\{(.*)\}/gi, '$1')
 
-    // Start a new list of matching rules
-    let newRules = ''
-
-    // Create a new attribute to identify matching elements
-    let attr = ''
-
-    let elWidth
-    let width
-    let height
-    let specificity
+    let elWidth = 0
+    let width = 0
+    let height = 0
+    let specificity = ''
 
     // For each rule, search for `-aspect-ratio`
     ruleText.replace(/(--aspect-ratio:\s*)(\d\.*\d*\s*\/\s*\d\.*\d*)(\s*\!important)*\s*(?:;|\})/i, (string, property, value, important) => {
@@ -174,17 +180,17 @@ License: MIT
 
         elWidth = tag.offsetWidth || 0
 
-        // If the ,atching element has a non-zero width
+        // If the matching element has a non-zero width
         if (elWidth) {
 
-          // Create an attribute based on the selector
-          attr = 'data-' + selector.replace(/[\s\'\"\=\>\[\]\~\^\$\*\:\(\)\#\.\+]/g, '-')
+          // Increment the plugin element count
+          aspecty.count ++
 
           // Create a new selector for our new CSS rule
-          let newSelector = selector + '[' + attr + '="' + i + '"]'
+          let newSelector = `${selector}[data-aspecty="${aspecty.count}"]`
 
           // If element has no preexisting attribute, add event listeners
-          if (!tag.getAttribute(attr)) {
+          if (!tag.getAttribute('data-aspecty')) {
 
             tag.addEventListener('mouseenter', aspecty.load)
             tag.addEventListener('mouseleave', aspecty.load)
@@ -195,8 +201,8 @@ License: MIT
 
           }
 
-          // Mark matching element with attribute and number
-          tag.setAttribute(attr, i)
+          // Mark matching element with attribute and plugin element count
+          tag.setAttribute('data-aspecty', aspecty.count)
 
           // Height for new rule from offsetWidth, divided by aspect ratio
           let newHeight = elWidth / (width/height)
@@ -205,7 +211,7 @@ License: MIT
           let newRuleText = `height: ${newHeight}px${specificity};`
 
           // And add our new rule to the rule list
-          newRules += `\n/* ${selector} */\n${newSelector} {\n  ${newRuleText}\n}\n`
+          newRule += `\n/* ${selector} */\n${newSelector} {\n  ${newRuleText}\n}\n`
 
         }
 
@@ -213,7 +219,7 @@ License: MIT
 
     })
 
-    return newRules
+    return newRule
 
   }
 

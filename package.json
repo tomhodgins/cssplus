@@ -17,10 +17,12 @@
     "url": "git+https://github.com/tomhodgins/cssplus.git"
   },
   "keywords": [
+    "Aspecty",
     "Cursory",
     "Scrollery",
     "Selectory",
     "Varsity",
+    "Xpathy",
     "CSS",
     "reprocessor",
     "selector",
@@ -31,6 +33,9 @@
     "scroll",
     "selector",
     "css",
+    "XPath",
+    "aspect",
+    "ratio",
     "variable"
   ],
   "author": "Tommy Hodgins",

@@ -2,7 +2,7 @@
 /*
 
 # Cursory
-## version 0.0.7
+## version 0.0.8
 
 Cursory is a CSS reprocessor that makes the following JS values available as CSS variables:
 
