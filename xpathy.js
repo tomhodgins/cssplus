@@ -2,7 +2,7 @@
 /*
 
 # XPathy
-## version 0.0.8
+## version 0.0.9
 
 XPathy is a CSS reprocessor that resolves selectors using XPath. This plugin will read CSS selectors that end with a `[xpath]` attribute and use JavaScript and XPath to determine whether or not to apply that style to elements matching the other part of that selector. For example, the XPath selector `//div` will always resolve to `div`, so a selector written for `div [xpath="//div"] {}` will always apply to each `div div {}` element.
 
@@ -147,14 +147,18 @@ License: MIT
     if (selector && selector.indexOf('[xpath=') !== -1) {
 
       // Extract the full selector name and test
-      selector.replace(/^(.*)\[xpath=(?:"(.*)"|'(.*)')\]/i, (string, selectorText, xpath) => {
+      selector.replace(/^(.*)\[xpath=(".*"|'.*')\]/i, (string, selectorText, xpath) => {
 
         // Create new array to hold nodes selected by XPath
-        var list = new Array()
+        let list = new Array()
+
+        let trimmedPath = xpath.replace(/^["'](.*)["']$/gm, '$1')
+        trimmedPath = trimmedPath.replace(/\\'/g, "'")
+        trimmedPath = trimmedPath.replace(/\\"/g, '"')
 
         // use document.evaluate() to query DOM with our XPath
-        var nodes = document.evaluate(
-          xpath.replace(/\\(['"])/g, '$1'),
+        let nodes = document.evaluate(
+          trimmedPath,
           document,
           null,
           XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
@@ -164,7 +168,7 @@ License: MIT
         // If at least one node matches our XPath
         if (nodes) {
 
-          for (var i=0; i<nodes.snapshotLength; i++) {
+          for (let i=0; i<nodes.snapshotLength; i++) {
 
             // Add each element to our list
             list.push(nodes.snapshotItem(i))
@@ -183,14 +187,15 @@ License: MIT
             xpathy.count++
 
             // Create a new selector for our new CSS rule
-            var newSelector = selector.replace(/^(.*\[)(xpath=(?:".*"|'.*'))(\])/i, (string, before, test, after) => {
+            let newSelector = selector.replace(/^(.*\[)(xpath=(?:".*"|'.*'))(\])/i, (string, before, test, after) => {
 
-              return `${before}data-xpathy="${xpathy.count}"${after}`
+              return `${before}data-xpathy~="${xpathy.count}"${after}`
 
             })
 
             // Mark matching element with attribute and plugin element count
-            tag.setAttribute('data-xpathy', xpathy.count)
+            let currentAttr = tag.getAttribute('data-xpathy')
+            tag.setAttribute('data-xpathy', `${currentAttr} ${xpathy.count}`)
 
             // And add our new attribute to the selector list for that rule
             selectorList.push(newSelector)

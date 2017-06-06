@@ -2,7 +2,7 @@
 /*
 
 # Aspecty
-## version 0.0.8
+## version 0.0.9
 
 Aspecty is a CSS reprocessor that adds support for an aspect-ratio property using JS. This plugin allows you to define a desired aspect-ratio for an element, based on its rendered width on the page.
 
@@ -187,7 +187,7 @@ License: MIT
           aspecty.count ++
 
           // Create a new selector for our new CSS rule
-          let newSelector = `${selector}[data-aspecty="${aspecty.count}"]`
+          let newSelector = `${selector}[data-aspecty~="${aspecty.count}"]`
 
           // If element has no preexisting attribute, add event listeners
           if (!tag.getAttribute('data-aspecty')) {
@@ -202,7 +202,8 @@ License: MIT
           }
 
           // Mark matching element with attribute and plugin element count
-          tag.setAttribute('data-aspecty', aspecty.count)
+          let currentAttr = tag.getAttribute('data-aspecty')
+          tag.setAttribute('data-aspecty', `${currentAttr} ${aspecty.count}`)
 
           // Height for new rule from offsetWidth, divided by aspect ratio
           let newHeight = elWidth / (width/height)

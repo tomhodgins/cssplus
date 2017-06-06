@@ -2,7 +2,7 @@
 /*
 
 # Selectory
-## version 0.0.8
+## version 0.0.9
 
 Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a `[test]` attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test `1 == 1` will always resolve to `true`, so a selector written for `div[test="1 == 1"] {}` will always apply to each `div` element.
 
@@ -147,11 +147,10 @@ License: MIT
     if (selector && selector.indexOf('[test=') !== -1) {
 
       // Extract the full selector name and test
-      selector.replace(/^(.*)\[test=(?:"(.*)"|'(.*)')\]/i, (string, selectorText, test) => {
+      selector.replace(/^(.*)\[test=(".*"|'.*')\]/i, (string, selectorText, test) => {
 
         // Use asterisk (*) if selectorText is an empty string
         selectorText = selectorText === '' ? '*' : selectorText
-        console.log(selectorText)
 
         // For each tag matching the selector (minus the test)
         Array.from(document.querySelectorAll(selectorText), (tag, i) => {
@@ -166,14 +165,15 @@ License: MIT
             selectory.count++
 
             // Create a new selector for our new CSS rule
-            var newSelector = selector.replace(/^(.*\[)(test=(?:".*"|'.*'))(\])/i, (string, before, test, after) => {
+            let newSelector = selector.replace(/^(.*\[)(test=(?:".*"|'.*'))(\])/i, (string, before, test, after) => {
 
-              return `${before}data-selectory="${selectory.count}"${after}`
+              return `${before}data-selectory~="${selectory.count}"${after}`
 
             })
 
             // Mark matching element with attribute and plugin element count
-            tag.setAttribute('data-selectory', selectory.count)
+            let currentAttr = tag.getAttribute('data-selectory')
+            tag.setAttribute('data-selectory', `${currentAttr} ${selectory.count}`)
 
             // And add our new attribute to the selector list for that rule
             selectorList.push(newSelector)
