@@ -2,7 +2,7 @@
 /*
 
 # Aspecty
-## version 0.0.9
+## version 0.0.10
 
 Aspecty is a CSS reprocessor that adds support for an aspect-ratio property using JS. This plugin allows you to define a desired aspect-ratio for an element, based on its rendered width on the page.
 
@@ -175,46 +175,52 @@ License: MIT
       height = parseInt(value.split('/')[1])
       specificity = important || ''
 
-      // For each element matching this selector
-      Array.from(document.querySelectorAll(selector), (tag, i) => {
+      let selectorList = (selector.split(','))
 
-        elWidth = tag.offsetWidth || 0
+      selectorList.map(partial => {
 
-        // If the matching element has a non-zero width
-        if (elWidth) {
+        // For each element matching this selector
+        Array.from(document.querySelectorAll(partial), (tag, i) => {
 
-          // Increment the plugin element count
-          aspecty.count ++
+          elWidth = tag.offsetWidth || 0
 
-          // Create a new selector for our new CSS rule
-          let newSelector = `${selector}[data-aspecty~="${aspecty.count}"]`
+          // If the matching element has a non-zero width
+          if (elWidth) {
 
-          // If element has no preexisting attribute, add event listeners
-          if (!tag.getAttribute('data-aspecty')) {
+            // Increment the plugin element count
+            aspecty.count++
 
-            tag.addEventListener('mouseenter', aspecty.load)
-            tag.addEventListener('mouseleave', aspecty.load)
-            tag.addEventListener('mousedown', aspecty.load)
-            tag.addEventListener('mouseup', aspecty.load)
-            tag.addEventListener('focus', aspecty.load)
-            tag.addEventListener('blur', aspecty.load)
+            // Create a new selector for our new CSS rule
+            let newSelector = `${partial}[data-aspecty~="${aspecty.count}"]`
+
+            // If element has no preexisting attribute, add event listeners
+            if (!tag.getAttribute('data-aspecty')) {
+
+              tag.addEventListener('mouseenter', aspecty.load)
+              tag.addEventListener('mouseleave', aspecty.load)
+              tag.addEventListener('mousedown', aspecty.load)
+              tag.addEventListener('mouseup', aspecty.load)
+              tag.addEventListener('focus', aspecty.load)
+              tag.addEventListener('blur', aspecty.load)
+
+            }
+
+            // Mark matching element with attribute and plugin element count
+            let currentAttr = tag.getAttribute('data-aspecty')
+            tag.setAttribute('data-aspecty', `${currentAttr} ${aspecty.count}`)
+
+            // Height for new rule from offsetWidth, divided by aspect ratio
+            let newHeight = elWidth / (width/height)
+
+            // Create new `height` declaration with new value and !important text
+            let newRuleText = `height: ${newHeight}px${specificity};`
+
+            // And add our new rule to the rule list
+            newRule += `\n/* ${selector} */\n${newSelector} {\n  ${newRuleText}\n}\n`
 
           }
 
-          // Mark matching element with attribute and plugin element count
-          let currentAttr = tag.getAttribute('data-aspecty')
-          tag.setAttribute('data-aspecty', `${currentAttr} ${aspecty.count}`)
-
-          // Height for new rule from offsetWidth, divided by aspect ratio
-          let newHeight = elWidth / (width/height)
-
-          // Create new `height` declaration with new value and !important text
-          let newRuleText = `height: ${newHeight}px${specificity};`
-
-          // And add our new rule to the rule list
-          newRule += `\n/* ${selector} */\n${newSelector} {\n  ${newRuleText}\n}\n`
-
-        }
+        })
 
       })
 

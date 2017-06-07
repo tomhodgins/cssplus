@@ -2,7 +2,7 @@
 /*
 
 # Varsity
-## version 0.0.9
+## version 0.0.10
 
 Varsity is a CSS reprocessor that makes the following JS values available as CSS variables for any element you tell the plugin to watch:
 
