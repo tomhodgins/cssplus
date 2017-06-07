@@ -2,7 +2,7 @@
 /*
 
 # Selectory
-## version 0.0.10
+## version 0.0.11
 
 Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a `[test]` attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test `1 == 1` will always resolve to `true`, so a selector written for `div[test="1 == 1"] {}` will always apply to each `div` element.
 
@@ -153,8 +153,8 @@ License: MIT
         // Extract the full selector name and test
         partial.replace(/^(.*)\[test=("(?:[^"]*)"|'(?:[^']*)')\].*/i, (string, selectorText, test) => {
 
-          test = test.replace(/'([^']*)'/m, '$1')
-          test = test.replace(/"([^"]*)"/m, '$1')
+          test = test.replace(/^'([^']*)'$/m, '$1')
+          test = test.replace(/^"([^"]*)"$/m, '$1')
 
           // Use asterisk if last character is a space, +, >, or ~
           selectorText = selectorText.replace(/[ \+\>\~]$/m, ' *')
@@ -175,8 +175,8 @@ License: MIT
               selectory.count++
 
               // Create a new selector for our new CSS rule
-              let newSelector = partial.replace(/^(.*\[)(test=(?:".*"|'.*'))(\])/i, (string, before, test, after) => {
-
+              let newSelector = partial.replace(/^(.*\[)(test=(?:"[^"]*"|'[^']*'))(\].*)$/mi, (string, before, test, after) => {
+                console.log(after)
                 return `${before}data-selectory~="${selectory.count}"${after}`
 
               })

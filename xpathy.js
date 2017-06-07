@@ -2,7 +2,7 @@
 /*
 
 # XPathy
-## version 0.0.10
+## version 0.0.11
 
 XPathy is a CSS reprocessor that resolves selectors using XPath. This plugin will read CSS selectors that end with a `[xpath]` attribute and use JavaScript and XPath to determine whether or not to apply that style to elements matching the other part of that selector. For example, the XPath selector `//div` will always resolve to `div`, so a selector written for `div [xpath="//div"] {}` will always apply to each `div div {}` element.
 
@@ -151,10 +151,10 @@ License: MIT
       if (partial && partial.indexOf('[xpath=') !== -1) {
 
         // Extract the full selector name and test
-        partial.replace(/^(.*)\[xpath=("(?:[^"]*)"|'(?:[^']*)')\]/i, (string, selectorText, xpath) => {
+        partial.replace(/^(.*)\[xpath=("(?:[^"]*)"|'(?:[^']*)')\].*/i, (string, selectorText, xpath) => {
 
-          xpath = xpath.replace(/'([^']*)'/m, '$1')
-          xpath = xpath.replace(/"([^"]*)"/m, '$1')
+          xpath = xpath.replace(/^'([^']*)'$/m, '$1')
+          xpath = xpath.replace(/^"([^"]*)"$/m, '$1')
 
           // Create new array to hold nodes selected by XPath
           let list = new Array()
@@ -190,7 +190,7 @@ License: MIT
               xpathy.count++
 
               // Create a new selector for our new CSS rule
-              let newSelector = partial.replace(/^(.*\[)(xpath=(?:".*"|'.*'))(\])/i, (string, before, test, after) => {
+              let newSelector = partial.replace(/^(.*\[)(xpath=(?:"[^"]*"|'[^']*'))(\].*)$/im, (string, before, test, after) => {
 
                 return `${before}data-xpathy~="${xpathy.count}"${after}`
 
