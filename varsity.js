@@ -40,7 +40,7 @@ Once the plugin is aware of an element to watch, and the unique name of that ele
 - `--example-offsetHeight`
 - `--example-offsetLeft`
 - `--example-offsetTop`
-- `--example-aspect-rat`io
+- `--example-aspect-ratio`
 - `--example-characters`
 - `--example-children`
 - `--example-value`
