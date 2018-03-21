@@ -1,8 +1,7 @@
-
 /*
 
 # Cursory
-## version 0.0.11
+## version 0.0.12
 
 Cursory is a CSS reprocessor that makes the following JS values available as CSS variables:
 
@@ -103,12 +102,15 @@ License: MIT
     let newRule = ''
 
     // List cursor position, window dimensions, and click status
-    newRule += `\n--cursorX: ${e.clientX || (e.touches ? e.touches[0].clientX : innerWidth/2)};`
-    + `\n--cursorY: ${e.clientY || ( e.touches ? e.touches[0].clientY : innerHeight/2)};`
-    + `\n--innerWidth: ${innerWidth};`
-    + `\n--innerHeight: ${innerHeight};`
-    + `\n--clicked: ${cursory.clicked};`
-    + '\n'
+    newRule = `
+
+      --cursorX: ${e.clientX || (e.touches ? e.touches[0].clientX : innerWidth/2)};
+      --cursorY: ${e.clientY || (e.touches ? e.touches[0].clientY : innerHeight/2)};
+      --innerWidth: ${innerWidth};
+      --innerHeight: ${innerHeight};
+      --clicked: ${cursory.clicked};
+
+    `
 
     return newRule
 

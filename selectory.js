@@ -1,8 +1,7 @@
-
 /*
 
 # Selectory
-## version 0.0.11
+## version 0.0.12
 
 Selectory is a CSS reprocessor that resolves selectors using JS. This plugin will read CSS selectors that end with a `[test]` attribute and use JavaScript to determine whether or not to apply that style to elements matching the other part of that selector. For example, the JS test `1 == 1` will always resolve to `true`, so a selector written for `div[test="1 == 1"] {}` will always apply to each `div` element.
 
@@ -145,65 +144,61 @@ License: MIT
 
     let selectorList = selector.split(',')
 
-    selectorList.map(partial => {
+    // If `[test=` is present anywhere in the selector
+    if (selector && selector.indexOf('[test=') !== -1) {
 
-      // If `[test=` is present anywhere in the selector
-      if (partial && partial.indexOf('[test=') !== -1) {
+      // Extract the full selector name and test
+      selector.replace(/^(.*)\[test=("(?:[^"]*)"|'(?:[^']*)')\].*/i, (string, selectorText, test) => {
 
-        // Extract the full selector name and test
-        partial.replace(/^(.*)\[test=("(?:[^"]*)"|'(?:[^']*)')\].*/i, (string, selectorText, test) => {
+        test = test.replace(/^'([^']*)'$/m, '$1')
+        test = test.replace(/^"([^"]*)"$/m, '$1')
 
-          test = test.replace(/^'([^']*)'$/m, '$1')
-          test = test.replace(/^"([^"]*)"$/m, '$1')
+        // Use asterisk if last character is a space, +, >, or ~
+        selectorText = selectorText.replace(/[ \+\>\~]$/m, ' *')
 
-          // Use asterisk if last character is a space, +, >, or ~
-          selectorText = selectorText.replace(/[ \+\>\~]$/m, ' *')
+        // Use asterisk (*) if selectorText is an empty string
+        selectorText = selectorText === '' ? '*' : selectorText
 
-          // Use asterisk (*) if selectorText is an empty string
-          selectorText = selectorText === '' ? '*' : selectorText
+        // For each tag matching the selector (minus the test)
+        Array.from(document.querySelectorAll(selectorText), (tag, i) => {
 
-          // For each tag matching the selector (minus the test)
-          Array.from(document.querySelectorAll(selectorText), (tag, i) => {
+          // Create a new function with our test
+          const func = new Function(`return (${test})`)
 
-            // Create a new function with our test
-            const func = new Function(`return (${test})`)
+          // Run the test with our matching element
+          if (func.call(tag)) {
 
-            // Run the test with our matching element
-            if (func.call(tag)) {
+            // Increment the plugin element count
+            selectory.count++
 
-              // Increment the plugin element count
-              selectory.count++
+            // Create a new selector for our new CSS rule
+            let newSelector = selector.replace(/^(.*\[)(test=(?:"[^"]*"|'[^']*'))(\].*)$/mi, (string, before, test, after) => {
+              console.log(after)
+              return `${before}data-selectory~="${selectory.count}"${after}`
 
-              // Create a new selector for our new CSS rule
-              let newSelector = partial.replace(/^(.*\[)(test=(?:"[^"]*"|'[^']*'))(\].*)$/mi, (string, before, test, after) => {
-                console.log(after)
-                return `${before}data-selectory~="${selectory.count}"${after}`
+            })
 
-              })
+            // Mark matching element with attribute and plugin element count
+            let currentAttr = tag.getAttribute('data-selectory')
+            tag.setAttribute('data-selectory', `${currentAttr} ${selectory.count}`)
 
-              // Mark matching element with attribute and plugin element count
-              let currentAttr = tag.getAttribute('data-selectory')
-              tag.setAttribute('data-selectory', `${currentAttr} ${selectory.count}`)
+            // And add our new attribute to the selector list for that rule
+            ruleList.push(newSelector)
 
-              // And add our new attribute to the selector list for that rule
-              ruleList.push(newSelector)
-
-            }
-
-          })
+          }
 
         })
 
-      }
+      })
 
-      // If at least one element passed the test
-      if (ruleList.length > 0) {
+    }
 
-          newRule =  `\n/* ${selector} */\n${ruleList} {\n   ${ruleText.replace(/(; )([^\{])/g,';\n  $2')}\n}\n`
+    // If at least one element passed the test
+    if (ruleList.length > 0) {
 
-      }
+        newRule =  `\n/* ${selector} */\n${ruleList} {\n   ${ruleText.replace(/(; )([^\{])/g,';\n  $2')}\n}\n`
 
-    })
+    }
 
     return newRule
 
