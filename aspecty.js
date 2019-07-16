@@ -1,7 +1,7 @@
 /*
 
 # Aspecty
-## version 0.0.12
+## version 0.1.1
 
 Aspecty is a CSS reprocessor that adds support for an aspect-ratio property using JS. This plugin allows you to define a desired aspect-ratio for an element, based on its rendered width on the page.
 
